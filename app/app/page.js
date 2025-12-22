@@ -1,28 +1,23 @@
-import styles from "./page.module.css";
+import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
     <main>
-      <section id="home" className={styles.hero}>
-        <h1 className={styles.name}>
-          <span>AYAN</span>
-          <span>MUKHERJEE.</span>
-        </h1>
+      <HeroSection />
+
+      <section id="projects" className="min-h-screen flex flex-col justify-center items-center bg-bg px-5 py-20 relative z-10">
+        <h2 className="font-grotesk font-bold text-4xl md:text-6xl text-text mb-6">Projects</h2>
+        <p className="text-lg text-white/60">Coming soon...</p>
       </section>
 
-      <section id="projects" className={styles.section}>
-        <h2 className={styles.sectionTitle}>Projects</h2>
-        <p className={styles.sectionContent}>Coming soon...</p>
+      <section id="blog" className="min-h-screen flex flex-col justify-center items-center bg-bg px-5 py-20 relative z-10">
+        <h2 className="font-grotesk font-bold text-4xl md:text-6xl text-text mb-6">Blog</h2>
+        <p className="text-lg text-white/60">Coming soon...</p>
       </section>
 
-      <section id="blog" className={styles.section}>
-        <h2 className={styles.sectionTitle}>Blog</h2>
-        <p className={styles.sectionContent}>Coming soon...</p>
-      </section>
-
-      <section id="contact" className={styles.section}>
-        <h2 className={styles.sectionTitle}>Contact</h2>
-        <p className={styles.sectionContent}>Coming soon...</p>
+      <section id="contact" className="min-h-screen flex flex-col justify-center items-center bg-bg px-5 py-20 relative z-10">
+        <h2 className="font-grotesk font-bold text-4xl md:text-6xl text-text mb-6">Contact</h2>
+        <p className="text-lg text-white/60">Coming soon...</p>
       </section>
     </main>
   );
