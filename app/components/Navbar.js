@@ -25,7 +25,7 @@ export default function Navbar() {
         <nav
             style={{
                 position: 'fixed',
-                top: isMobile ? '16px' : '28px',
+                top: isMobile ? '12px' : '20px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 zIndex: 1000
@@ -38,7 +38,7 @@ export default function Navbar() {
                     WebkitBackdropFilter: 'blur(24px)',
                     border: '1px solid rgba(255, 255, 255, 0.12)',
                     borderRadius: '50px',
-                    padding: isMobile ? '8px 12px' : '12px 16px',
+                    padding: isMobile ? '6px 10px' : '8px 12px',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)'
                 }}
             >
@@ -57,8 +57,8 @@ export default function Navbar() {
                                 href={link.href}
                                 style={{
                                     display: 'block',
-                                    padding: isMobile ? '8px 14px' : '10px 20px',
-                                    fontSize: isMobile ? '13px' : '15px',
+                                    padding: isMobile ? '6px 12px' : '8px 16px',
+                                    fontSize: isMobile ? '12px' : '13px',
                                     fontWeight: 500,
                                     color: 'rgba(255, 255, 255, 0.7)',
                                     textDecoration: 'none',
