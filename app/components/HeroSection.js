@@ -38,16 +38,17 @@ export default function HeroSection() {
             >
                 {/* Left content */}
                 <div>
-                    {/* Hello I'm text - grey, no italic */}
+                    {/* Hello I'm text */}
                     <p
                         style={{
                             fontFamily: "'Poppins', sans-serif",
                             fontWeight: 700,
                             fontStyle: 'normal',
                             color: '#888888',
-                            fontSize: isMobile ? '8vw' : '2.5vw',
+                            fontSize: isMobile ? '8vw' : '4vw',
                             marginBottom: '0',
-                            letterSpacing: '-0.02em'
+                            letterSpacing: '-0.02em',
+                            whiteSpace: 'nowrap'
                         }}
                     >
                         Hello I'm
@@ -58,11 +59,11 @@ export default function HeroSection() {
                         style={{
                             display: 'flex',
                             alignItems: 'flex-start',
-                            marginTop: isMobile ? '-2vw' : '-1vw',
+                            marginTop: isMobile ? '-2vw' : '-1.5vw',
                             marginBottom: '0'
                         }}
                     >
-                        {/* Large 7 with gradient - LARGEST element */}
+                        {/* Large 7 with gradient */}
                         <span
                             style={{
                                 fontFamily: "'Inter Tight', sans-serif",
@@ -86,11 +87,11 @@ export default function HeroSection() {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'flex-end',
-                                marginTop: isMobile ? '1vw' : '2vw',
+                                marginTop: isMobile ? '1vw' : '1.5vw',
                                 position: 'relative'
                             }}
                         >
-                            {/* AYAN WebM Video - positioned behind, larger size */}
+                            {/* AYAN WebM Video */}
                             <video
                                 autoPlay
                                 loop
@@ -101,10 +102,10 @@ export default function HeroSection() {
                                     width: 'auto',
                                     objectFit: 'contain',
                                     position: 'absolute',
-                                    top: isMobile ? '-59vw' : '-41.5vw',
-                                    left: isMobile ? '-90vw' : '-42vw',
+                                    top: isMobile ? '-5vw' : '-5.6vw',
+                                    left: isMobile ? '2vw' : '-0vw',
                                     zIndex: 0,
-                                    transform: 'scale(5.0)',
+                                    transform: 'scale(1.1)',
                                     transformOrigin: 'left top'
                                 }}
                             >
@@ -121,15 +122,15 @@ export default function HeroSection() {
                                     fontWeight: 400,
                                     color: '#888888',
                                     fontSize: isMobile ? '3vw' : '1.1vw',
-                                    marginTop: isMobile ? '-2vw' : '-2.5vw',
+                                    marginTop: isMobile ? '-6vw' : '-3.5vw',
+                                    marginLeft: isMobile ? '4.5vw' : '2vw',
                                     lineHeight: 1.4,
                                     letterSpacing: '0',
                                     position: 'relative',
                                     zIndex: 1
                                 }}
                             >
-                                I specialize in problem solving, UI design, editing<br />
-                                as well as full-stack development.
+                                I specialize in problem solving, UI design, editing as well as full-stack development.
                             </p>
                         </div>
                     </div>
