@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import TechScroll from "./TechScroll";
+import SocialCards from "./SocialCards";
 
 export default function HeroSection() {
     const [isMobile, setIsMobile] = useState(false);
@@ -18,12 +20,12 @@ export default function HeroSection() {
         <section
             id="home"
             style={{
-                minHeight: '100vh',
+                minHeight: isMobile ? 'auto' : '100vh',
                 display: 'flex',
                 alignItems: isMobile ? 'flex-start' : 'center',
                 backgroundColor: '#000000',
-                paddingTop: isMobile ? '120px' : '0',
-                marginTop: isMobile ? '0' : '-10vh'
+                paddingTop: isMobile ? '120px' : '140px',
+                paddingBottom: isMobile ? '40px' : '60px',
             }}
         >
             <div
@@ -37,7 +39,7 @@ export default function HeroSection() {
                 }}
             >
                 {/* Left content */}
-                <div>
+                <div style={{ width: isMobile ? '100%' : '50%', flexShrink: 0 }}>
                     {/* Hello I'm text */}
                     <p
                         style={{
@@ -91,26 +93,22 @@ export default function HeroSection() {
                                 position: 'relative'
                             }}
                         >
-                            {/* AYAN WebM Video */}
-                            <video
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
+                            {/* AYAN Image */}
+                            <img
+                                src="/AYAN.png"
+                                alt="AYAN"
                                 style={{
-                                    height: isMobile ? '28vw' : '18vw',
+                                    height: isMobile ? '18vw' : '8vw',
                                     width: 'auto',
                                     objectFit: 'contain',
                                     position: 'absolute',
-                                    top: isMobile ? '-5vw' : '-5.6vw',
-                                    left: isMobile ? '2vw' : '-0vw',
+                                    top: isMobile ? '0.6vw' : '-0.8vw',
+                                    left: isMobile ? '7vw' : '2.5vw',
                                     zIndex: 0,
                                     transform: 'scale(1.1)',
                                     transformOrigin: 'left top'
                                 }}
-                            >
-                                <source src="/Ayan.webm" type="video/webm" />
-                            </video>
+                            />
 
                             {/* Spacer to maintain layout height */}
                             <div style={{ height: isMobile ? '28vw' : '13vw' }} />
@@ -122,7 +120,7 @@ export default function HeroSection() {
                                     fontWeight: 400,
                                     color: '#888888',
                                     fontSize: isMobile ? '3vw' : '1.1vw',
-                                    marginTop: isMobile ? '-6vw' : '-3.5vw',
+                                    marginTop: isMobile ? '-6vw' : '-3.8vw',
                                     marginLeft: isMobile ? '4.5vw' : '2vw',
                                     lineHeight: 1.4,
                                     letterSpacing: '0',
@@ -134,6 +132,12 @@ export default function HeroSection() {
                             </p>
                         </div>
                     </div>
+
+                    {/* Tech Stack Infinite Scroll */}
+                    <TechScroll />
+
+                    {/* Social Cards */}
+                    <SocialCards />
                 </div>
 
                 {/* Right side: Motion Graphics Video */}
@@ -144,10 +148,10 @@ export default function HeroSection() {
                         muted
                         playsInline
                         style={{
-                            height: '32vw',
+                            height: '25vw',
                             width: 'auto',
                             objectFit: 'contain',
-                            marginRight: '-40px',
+                            marginLeft: '-8vw',
                             marginTop: '8vw'
                         }}
                     >
