@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cinematic Glass Portfolio
 
-## Getting Started
+A high-fidelity, immersive personal portfolio website built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**. This project features a unique "Glass Stack" design system, cinematic aesthetics, and smooth scroll-triggered animations.
 
-First, run the development server:
+![Portfolio Preview](/public/my%20pfp.jpg)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-   **Cinematic Design System**: a custom dark mode aesthetic (`#0b0b0d`) with deep backdrop blurs, gradients, and soft lighting effects.
+-   **Glass Stack Layout**: A vertical scrolling stack of glass cards with parallax-like depth.
+-   **Bento Grid Layouts**: Responsive, grid-based layouts for the Identity and Connect sections.
+-   **Interactive Carousels**: Auto-cycling project showcases with hover-pause functionality and smooth transitions.
+-   **Advanced Animations**:
+    -   Scroll-triggered title reveals using `framer-motion`.
+    -   Entry/Exit animations optimized for performance.
+    -   Interactive hover states for all cards and buttons.
+-   **Responsive Navigation**:
+    -   Floating capsule navbar with intersection-based active state tracking.
+    -   Seamless cross-page navigation (`/works`, `/labs`) with back support.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-   **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+-   **Animation**: [Framer Motion](https://www.framer.com/motion/)
+-   **Icons**: [Lucide React](https://lucide.dev/)
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-   Node.js 18+ 
+-   npm or pnpm
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/yourusername/portfolio.git
+    cd portfolio
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    # or
+    pnpm install
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+4.  **Build for production**:
+    ```bash
+    npm run build
+    npm start
+    ```
+
+## 📂 Project Structure
+
+-   `app/`: App Router pages and global layouts.
+-   `components/`: Reusable UI components.
+    -   `GlassSection.tsx`: The core container component for the glass aesthetic.
+    -   `ProjectCarousel.tsx`: Reusable carousel for Works and Labs.
+    -   `Navbar.tsx`: Smart navigation component.
+-   `public/`: Static assets (images, fonts).
+
+## 🎨 Customizing
+
+1.  **Content**: Edit `app/page.tsx` to update your bio, social links, and bento grid layout.
+2.  **Projects**: Update the `works` and `labs` arrays in `app/page.tsx`, `app/works/page.tsx`, and `app/labs/page.tsx`.
+3.  **Profile Picture**: Replace `public/my pfp.jpg` with your own image.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).

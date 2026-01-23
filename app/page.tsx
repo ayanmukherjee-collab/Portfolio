@@ -28,13 +28,10 @@ export default function Home() {
         title="IDENTITY"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 h-full p-2">
-          {/* ... Identity content remains ... */}
-          {/* Left Column (Span 4) - Focused on Identity Visuals */}
+
           <div className="lg:col-span-4 flex flex-col gap-4 lg:gap-6 h-full">
 
-            {/* Box 1: Profile Picture - aspect-[4/3] on mobile, flex-1 (vertical) on desktop */}
             <div className="w-full aspect-[4/3] lg:aspect-auto lg:flex-1 rounded-2xl bg-white/5 backdrop-blur-[18px] border border-white/10 relative overflow-hidden group flex-shrink-0">
-              {/* PFP Image */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/my pfp.jpg"
@@ -49,7 +46,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Box 3: Socials */}
             <div className="h-20 lg:h-24 rounded-2xl bg-white/5 backdrop-blur-[18px] border border-white/10 flex items-center justify-around px-4 hover:bg-white/[0.07] transition-colors flex-shrink-0">
               {[
                 { icon: Linkedin, href: "#", label: "LinkedIn" },
@@ -64,10 +60,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Column (Span 8) - Content & Navigation */}
-          <div className="lg:col-span-8 flex flex-col gap-4 lg:gap-6 h-full min-h-0"> {/* min-h-0 helps with nested flex/grid overflow issues */}
+          <div className="lg:col-span-8 flex flex-col gap-4 lg:gap-6 h-full min-h-0">
 
-            {/* Box 2: Description & Tech */}
             <div className="flex-1 rounded-2xl bg-white/[0.015] backdrop-blur-[18px] border border-white/10 p-6 md:p-8 flex flex-col justify-between hover:bg-white/[0.04] transition-colors relative group">
               <div>
                 <p className="text-xl md:text-2xl lg:text-3xl text-white/90 font-light leading-relaxed max-w-3xl mb-6">
@@ -90,9 +84,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Box 4: Selected Works Link - HIDDEN ON MOBILE */}
             <a href="#work" className="hidden lg:flex h-32 md:h-auto flex-shrink-0 lg:flex-1 rounded-2xl bg-white/5 backdrop-blur-[24px] border border-white/10 p-6 md:p-8 items-center justify-between group hover:bg-white/[0.07] hover:border-white/20 transition-all cursor-pointer relative overflow-hidden">
-              {/* Grid Pattern Background */}
               <div
                 className="absolute inset-0 opacity-[0.05] pointer-events-none"
                 style={{
@@ -110,7 +102,6 @@ export default function Home() {
                 <ArrowUpRight size={20} className="md:w-6 md:h-6" />
               </div>
 
-              {/* Hover Gradient Background */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </a>
           </div>
