@@ -10,12 +10,11 @@ export default function StenographyPage() {
         <main className="min-h-screen bg-[#0b0b0d] text-white selection:bg-white/20">
 
             {/* Navigation */}
-            <nav className="fixed top-0 left-0 w-full z-50 p-6 flex justify-between items-center bg-gradient-to-b from-black/50 to-transparent pointer-events-none">
-                <Link href="/labs" className="pointer-events-auto flex items-center gap-2 text-white/40 hover:text-white transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 group">
-                    <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-sm font-medium uppercase tracking-wider">Back to Labs</span>
-                </Link>
-            </nav>
+            {/* Navigation */}
+            <Link href="/labs" className="fixed bottom-8 left-1/2 -translate-x-1/2 md:translate-x-0 md:bottom-auto md:top-6 md:left-6 z-50 flex items-center gap-2 text-white/40 hover:text-white transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 group">
+                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm font-medium uppercase tracking-wider">Back to Labs</span>
+            </Link>
 
             {/* Hero Section */}
             <section className="relative w-full py-32 px-4 flex flex-col items-center text-center">

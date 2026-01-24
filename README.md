@@ -1,4 +1,10 @@
 # Cinematic Glass Portfolio
+ 
+<div align="center">
+
+[![Live Preview](https://img.shields.io/badge/Live_Preview-Visit_Site-success?style=for-the-badge&logo=vercel&logoColor=white)](https://ayan-mukherjee.vercel.app/)
+
+</div>
 
 A high-fidelity, immersive personal portfolio website built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**. This project features a unique "Glass Stack" design system, cinematic aesthetics, and smooth scroll-triggered animations.
 
