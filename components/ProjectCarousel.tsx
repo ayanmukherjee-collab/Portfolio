@@ -77,10 +77,8 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                 }
             }}
         >
-            {/* Background Gradient Animation (Optional subtle shift) */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
 
-            {/* Desktop Navigation Arrows */}
             <button
                 onClick={(e) => { e.stopPropagation(); prevSlide(); }}
                 className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/5 border border-white/10 items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all opacity-0 group-hover:opacity-100"
@@ -104,15 +102,13 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                     exit={{ y: -20, opacity: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 select-none"
-                    // Prevent click propagation for drag to work smoothly
                     onPointerDown={(e) => e.stopPropagation()}
                 >
-                    {/* Number Indicator big in background */}
                     <div className="absolute top-4 right-6 text-[120px] md:text-[200px] font-bold text-white/[0.02] leading-none select-none pointer-events-none font-mono">
                         0{items[currentIndex].id}
                     </div>
 
-                    <div className="relative z-10 pointer-events-none"> {/* Make text unobstructive to drag if needed, but buttons need clicks. Actually, keeping pointer-events-auto is fine if drag is on parent. */}
+                    <div className="relative z-10 pointer-events-none">
                         <div className="flex items-center gap-3 mb-2">
                             <span className="h-px w-8 bg-white/40" />
                             <span className="text-xs font-mono uppercase tracking-widest text-white/60">
@@ -132,7 +128,6 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Progress Indicators */}
             <div className="absolute bottom-6 right-6 md:bottom-12 md:right-12 flex gap-2 z-20">
                 {items.map((_, idx) => (
                     <button

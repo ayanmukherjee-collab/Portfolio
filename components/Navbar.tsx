@@ -19,7 +19,7 @@ export function Navbar() {
     const isHome = pathname === "/";
 
     useEffect(() => {
-        if (!isHome) return; // Only track scroll on home page
+        if (!isHome) return;
 
         const handleScroll = () => {
             const sections = navItems.map(item => document.getElementById(item.id));
@@ -31,12 +31,9 @@ export function Navbar() {
                 if (!section) return;
 
                 const rect = section.getBoundingClientRect();
-                // Calculate distance from center of viewport to center of section
                 const sectionCenter = rect.top + rect.height / 2;
                 const viewportCenter = window.innerHeight / 2;
                 const distance = Math.abs(viewportCenter - sectionCenter);
-
-                // Standard check: Is it reasonably on screen?
                 const isOnScreen = rect.top < window.innerHeight / 2 + 100 && rect.bottom > window.innerHeight / 2 - 100;
 
                 if (distance < minDistance && isOnScreen) {
@@ -45,16 +42,14 @@ export function Navbar() {
                 }
             });
 
-            // Update if changed
             setActiveId(prev => (prev !== currentActiveId ? currentActiveId : prev));
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
-        // Initial check
         handleScroll();
 
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [isHome]); // Re-run effect if isHome changes (though logic mainly handles mount/unmount)
+    }, [isHome]);
 
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
         if (isHome) {
@@ -64,7 +59,6 @@ export function Navbar() {
                 element.scrollIntoView({ behavior: "smooth" });
             }
         }
-        // If not home, standard Link navigation to /#id occurs
     };
 
     return (
@@ -75,9 +69,6 @@ export function Navbar() {
                 "shadow-[0_4px_24px_-1px_rgba(0,0,0,0.2)]"
             )}>
                 {navItems.map((item) => {
-                    // If not home, we don't really have an "active" section in the main nav sense, 
-                    // or we could possibly highlight "Work" if on /works, but simpler to just show none proper active or stick to default.
-                    // Let's keep active state only visible on Home for clarity, or just rely on activeId (which defaults to 'identity' or last known).
                     const isActive = isHome && activeId === item.id;
 
                     return (

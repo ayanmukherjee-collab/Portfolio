@@ -19,7 +19,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
 @layer utilities {
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
@@ -44,8 +43,6 @@ body {
 
   .no-scrollbar {
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
   }
 }

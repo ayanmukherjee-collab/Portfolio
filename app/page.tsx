@@ -17,10 +17,6 @@ const labs = [
 export default function Home() {
   return (
     <main className="flex flex-col w-full items-center">
-      {/* 
-        Container for the stack. 
-        Each section creates its own context.
-      */}
 
       <GlassSection
         id="identity"
@@ -40,7 +36,6 @@ export default function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              {/* Status Dot */}
               <div className="absolute top-6 left-6 z-20">
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 duration-1000"></span>
