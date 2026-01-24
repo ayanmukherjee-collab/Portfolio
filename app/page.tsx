@@ -40,6 +40,14 @@ export default function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
+              {/* Status Dot */}
+              <div className="absolute top-6 left-6 z-20">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 duration-1000"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+              </div>
+
               <div className="absolute bottom-6 left-6 z-10 p-2">
                 <p className="text-[10px] md:text-xs font-semibold tracking-[0.2em] text-white/60 uppercase mb-1">01 / PROFILE</p>
                 <h3 className="text-white font-bold text-lg md:text-xl">Ayan Mukherjee</h3>
@@ -48,12 +56,12 @@ export default function Home() {
 
             <div className="h-20 lg:h-24 rounded-2xl bg-white/5 backdrop-blur-[18px] border border-white/10 flex items-center justify-around px-4 hover:bg-white/[0.07] transition-colors flex-shrink-0">
               {[
-                { icon: Linkedin, href: "#", label: "LinkedIn" },
-                { icon: Twitter, href: "#", label: "Twitter" },
-                { icon: Instagram, href: "#", label: "Instagram" },
-                { icon: Github, href: "#", label: "GitHub" },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/ayan-vfx", label: "LinkedIn" },
+                { icon: Twitter, href: "https://x.com/simply_ayann", label: "Twitter" },
+                { icon: Instagram, href: "https://www.instagram.com/simply.ayannn", label: "Instagram" },
+                { icon: Github, href: "https://github.com/ayanmukherjee-collab", label: "GitHub" },
               ].map((item) => (
-                <a key={item.label} href={item.href} aria-label={item.label} className="text-white/40 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg">
+                <a key={item.label} href={item.href} aria-label={item.label} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg">
                   <item.icon size={20} strokeWidth={1.5} />
                 </a>
               ))}
@@ -166,11 +174,11 @@ export default function Home() {
       >
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 md:gap-6 w-full h-full">
           {[
-            { label: "Email", href: "mailto:hello@example.com", icon: ArrowUpRight, span: "col-span-2 md:col-span-2" },
-            { label: "Twitter / X", href: "#", icon: Twitter, span: "col-span-1 md:col-span-2" },
-            { label: "GitHub", href: "#", icon: Github, span: "col-span-1 md:col-span-2" },
-            { label: "LinkedIn", href: "#", icon: Linkedin, span: "col-span-1 md:col-span-3" },
-            { label: "Instagram", href: "#", icon: Instagram, span: "col-span-1 md:col-span-3" },
+            { label: "Email", href: "mailto:ayanmukherjee.official@gmail.com", icon: ArrowUpRight, span: "col-span-2 md:col-span-2" },
+            { label: "Twitter / X", href: "https://x.com/simply_ayann", icon: Twitter, span: "col-span-1 md:col-span-2" },
+            { label: "GitHub", href: "https://github.com/ayanmukherjee-collab", icon: Github, span: "col-span-1 md:col-span-2" },
+            { label: "LinkedIn", href: "https://www.linkedin.com/in/ayan-vfx", icon: Linkedin, span: "col-span-1 md:col-span-3" },
+            { label: "Instagram", href: "https://www.instagram.com/simply.ayannn", icon: Instagram, span: "col-span-1 md:col-span-3" },
           ].map((item) => (
             <a
               key={item.label}

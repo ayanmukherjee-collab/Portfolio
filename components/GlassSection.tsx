@@ -33,7 +33,7 @@ export function GlassSection({ label, title, children, className, id }: GlassSec
                         visible: { y: 0, opacity: 0.8, transition: { duration: 1, ease: "easeOut" } }
                     }}
                     className={twMerge(
-                        "absolute top-[5rem] lg:top-[7rem] z-0", // Adjusted top for mobile
+                        "absolute top-[5.9rem] lg:top-[7rem] z-0", // Adjusted top for mobile to sit half behind card
                         "text-[60px] md:text-[100px] lg:text-[150px] font-bold text-white leading-none tracking-tighter", // Responsive text size
                         "select-none pointer-events-none",
                         "left-1/2 -translate-x-1/2 w-full text-center",

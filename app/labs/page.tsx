@@ -15,13 +15,13 @@ import { ArrowLeft } from "lucide-react";
 export default function LabsPage() {
     return (
         <main className="min-h-screen bg-[#0b0b0d] flex flex-col items-center py-24 px-4 relative">
-            <Link href="/" className="fixed top-6 left-6 z-50 flex items-center gap-2 text-white/40 hover:text-white transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <Link href="/" className="fixed bottom-8 left-1/2 -translate-x-1/2 md:translate-x-0 md:bottom-auto md:top-6 md:left-6 z-50 flex items-center gap-2 text-white/40 hover:text-white transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                 <ArrowLeft size={16} />
                 <span className="text-sm font-medium uppercase tracking-wider">Back</span>
             </Link>
 
             <div className="w-full max-w-[1400px]">
-                <header className="mb-24 text-center">
+                <header className="mb-24 text-center mt-[30vh] md:mt-0">
                     <span className="text-white/40 font-mono uppercase tracking-widest text-sm mb-4 block">02 / R&D</span>
                     <h1 className="text-6xl md:text-8xl font-bold text-white mb-6">Labs</h1>
                     <p className="text-white/60 max-w-2xl mx-auto text-lg font-light">
