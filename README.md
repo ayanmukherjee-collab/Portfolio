@@ -2,7 +2,7 @@
 
 A high-fidelity, immersive personal portfolio website built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**. This project features a unique "Glass Stack" design system, cinematic aesthetics, and smooth scroll-triggered animations.
 
-![Portfolio Preview](/public/my%20pfp.jpg)
+![Portfolio Preview](public/readme-preview.png)
 
 ## 🌟 Features
 
