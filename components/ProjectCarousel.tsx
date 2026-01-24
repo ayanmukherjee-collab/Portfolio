@@ -3,11 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export interface CarouselItem {
     id: number;
     title: string;
     category: string;
+    href?: string;
+    image?: string;
 }
 
 interface ProjectCarouselProps {
@@ -104,6 +107,17 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                     className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 select-none"
                     onPointerDown={(e) => e.stopPropagation()}
                 >
+                    {items[currentIndex].image && (
+                        <div className="absolute inset-0 z-0">
+                            <img
+                                src={items[currentIndex].image}
+                                alt={items[currentIndex].title}
+                                className="w-full h-full object-cover opacity-60 scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        </div>
+                    )}
+
                     <div className="absolute top-4 right-6 text-[120px] md:text-[200px] font-bold text-white/[0.02] leading-none select-none pointer-events-none font-mono">
                         0{items[currentIndex].id}
                     </div>
@@ -120,10 +134,17 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                             {items[currentIndex].title}
                         </h3>
 
-                        <button className="flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white transition-colors group/btn w-fit pointer-events-auto">
-                            <span>VIEW CASE STUDY</span>
-                            <ArrowUpRight size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                        </button>
+                        {items[currentIndex].href ? (
+                            <Link href={items[currentIndex].href} className="flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white transition-colors group/btn w-fit pointer-events-auto">
+                                <span>VIEW CASE STUDY</span>
+                                <ArrowUpRight size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                            </Link>
+                        ) : (
+                            <button className="flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white transition-colors group/btn w-fit pointer-events-auto">
+                                <span>VIEW CASE STUDY</span>
+                                <ArrowUpRight size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                            </button>
+                        )}
                     </div>
                 </motion.div>
             </AnimatePresence>

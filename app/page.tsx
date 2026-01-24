@@ -9,9 +9,9 @@ const works = [
 ];
 
 const labs = [
-  { id: 1, title: "Fluid Simulation", category: "WebGL • GLSL" },
-  { id: 2, title: "Raymarching Engine", category: "Three.js • Physics" },
-  { id: 3, title: "Generative Audio", category: "WebAudio • Canvas" },
+  { id: 1, title: "Stenography", category: "Cryptography • Security", href: "/labs/stenography", image: "https://i.pinimg.com/originals/7e/f0/01/7ef001bcd5e84b508d8c8ce33e3015c5.gif" },
+  { id: 2, title: "Fluid Simulation", category: "WebGL • GLSL" },
+  { id: 3, title: "Raymarching Engine", category: "Three.js • Physics" },
 ];
 
 export default function Home() {
