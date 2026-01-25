@@ -11,6 +11,213 @@ export interface CarouselItem {
     category: string;
     href?: string;
     image?: string;
+    customThumbnail?: string;
+}
+
+// Steganography animation for carousel - torchlight reveal effect
+function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
+    const gridSize = 24;
+    const revealRadius = 8; // Radius in grid cells
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
+
+    // Hidden pixels scattered across the entire grid
+    const hiddenPixels = new Set([
+        // Top area
+        3, 8, 14, 19, 22,
+        27, 35, 42,
+        51, 58, 66,
+
+        // Upper middle
+        76, 82, 89, 94,
+        103, 111, 118,
+        127, 134, 141, 147,
+        152, 159, 166, 172,
+
+        // Center area
+        181, 188, 195, 202, 209,
+        217, 224, 231, 238,
+        243, 251, 258, 265, 271,
+        280, 287, 294, 301,
+
+        // Lower middle
+        312, 319, 326, 333, 340,
+        351, 358, 365, 372,
+        384, 391, 398, 405,
+        413, 420, 427, 434, 441,
+
+        // Bottom area
+        456, 463, 470, 477,
+        489, 496, 503, 510, 517,
+        532, 539, 546, 553,
+        561, 568, 575,
+    ]);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        // Calculate mouse position as grid coordinates (0 to gridSize)
+        const x = ((e.clientX - rect.left) / rect.width) * gridSize;
+        const y = ((e.clientY - rect.top) / rect.height) * gridSize;
+        setMousePos({ x, y });
+    };
+
+    const handleMouseLeave = () => {
+        setMousePos({ x: -100, y: -100 });
+    };
+
+    return (
+        <div
+            ref={containerRef}
+            className="absolute inset-0 bg-[#0c0c0c] overflow-hidden"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+        >
+            {/* Full-size pixel grid with gaps */}
+            <div
+                className="grid gap-[2px] w-full h-full p-4"
+                style={{
+                    gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+                    gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+                }}
+            >
+                {Array.from({ length: gridSize * gridSize }).map((_, i) => {
+                    const isHidden = hiddenPixels.has(i);
+                    const row = Math.floor(i / gridSize);
+                    const col = i % gridSize;
+
+                    // Calculate distance from mouse to this cell
+                    const distance = Math.sqrt(
+                        Math.pow(col - mousePos.x, 2) + Math.pow(row - mousePos.y, 2)
+                    );
+                    const isInRadius = distance < revealRadius;
+                    const isRevealed = isPaused && isHidden && isInRadius;
+
+                    // Brightness falloff based on distance
+                    const brightness = isInRadius
+                        ? Math.max(0, 1 - (distance / revealRadius) * 0.5)
+                        : 0;
+
+                    return (
+                        <div
+                            key={i}
+                            className="rounded-[1px] transition-all duration-150"
+                            style={{
+                                backgroundColor: isRevealed
+                                    ? `rgba(255,255,255,${0.9 * brightness})`
+                                    : isPaused && isInRadius
+                                        ? `rgba(255,255,255,${0.15 * brightness})`
+                                        : 'rgba(255,255,255,0.04)',
+                                boxShadow: isRevealed
+                                    ? `0 0 ${12 * brightness}px rgba(255, 255, 255, ${0.6 * brightness})`
+                                    : 'none',
+                            }}
+                        />
+                    );
+                })}
+            </div>
+
+            {/* Torchlight glow effect that follows cursor */}
+            {isPaused && (
+                <div
+                    className="absolute pointer-events-none transition-opacity duration-300"
+                    style={{
+                        left: `${(mousePos.x / gridSize) * 100}%`,
+                        top: `${(mousePos.y / gridSize) * 100}%`,
+                        transform: 'translate(-50%, -50%)',
+                        width: '200px',
+                        height: '200px',
+                        background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)',
+                        opacity: mousePos.x > 0 ? 1 : 0
+                    }}
+                />
+            )}
+
+            {/* Vignette overlay */}
+            <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    background: 'radial-gradient(ellipse at center, transparent 20%, rgba(12, 12, 12, 0.6) 60%, rgba(12, 12, 12, 0.95) 100%)'
+                }}
+            />
+
+            {/* Edge blur effect */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+                boxShadow: 'inset 0 0 80px 40px rgba(12, 12, 12, 0.7)'
+            }} />
+        </div>
+    );
+}
+
+// Terminal animation for carousel - responds to carousel hover
+function TerminalCarouselAnimation({ isPaused }: { isPaused: boolean }) {
+    return (
+        <div className="absolute inset-0 bg-[#0c0c0c] flex flex-col font-mono">
+            {/* Terminal Header */}
+            <div className="h-8 bg-white/[0.03] border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
+                <div className="w-3 h-3 rounded-full bg-[#ff5f56]/60" />
+                <div className="w-3 h-3 rounded-full bg-[#ffbd2e]/60" />
+                <div className="w-3 h-3 rounded-full bg-[#27ca40]/60" />
+                <span className="text-white/20 text-[11px] ml-2 font-medium tracking-wide">zsh</span>
+            </div>
+
+            {/* Terminal Content */}
+            <div className="flex-1 px-6 py-6 flex flex-col justify-start">
+                <div className="space-y-3 text-sm">
+                    <div
+                        className="flex items-start gap-2 transition-all duration-300"
+                        style={{
+                            opacity: isPaused ? 1 : 0.5,
+                            transform: isPaused ? 'translateX(0)' : 'translateX(-8px)'
+                        }}
+                    >
+                        <span className="text-emerald-400 font-semibold">$</span>
+                        <div className="flex flex-wrap gap-x-1">
+                            <span className="text-cyan-400 font-medium">curl</span>
+                            <span className="text-white/50">-OJ</span>
+                            <span className="text-amber-400/90">&quot;cli-ai.vercel.app/api/ask?q=hello&quot;</span>
+                        </div>
+                    </div>
+                    <div
+                        className="text-white/40 text-xs pl-5 transition-all duration-300"
+                        style={{
+                            opacity: isPaused ? 0.8 : 0.3,
+                            transform: isPaused ? 'translateX(0)' : 'translateX(-8px)',
+                            transitionDelay: '0.1s'
+                        }}
+                    >
+                        ▓▓▓▓▓▓▓▓▓▓ 100%
+                    </div>
+                    <div
+                        className="flex items-center gap-2 pl-5 transition-all duration-300"
+                        style={{
+                            opacity: isPaused ? 1 : 0.4,
+                            transform: isPaused ? 'translateX(0)' : 'translateX(-8px)',
+                            transitionDelay: '0.2s'
+                        }}
+                    >
+                        <span className="text-emerald-400">✓</span>
+                        <span className="text-white/80 font-medium">hello.py</span>
+                        <span className="text-white/30 text-xs">saved</span>
+                    </div>
+                    <div
+                        className="flex items-center gap-2 transition-all duration-300"
+                        style={{
+                            opacity: isPaused ? 1 : 0.4,
+                            transform: isPaused ? 'translateX(0)' : 'translateX(-8px)',
+                            transitionDelay: '0.3s'
+                        }}
+                    >
+                        <span className="text-emerald-400 font-semibold">$</span>
+                        <span
+                            className="text-emerald-400"
+                            style={{ animation: isPaused ? 'cursorBlink 1s step-end infinite' : 'none' }}
+                        >▋</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 interface ProjectCarouselProps {
@@ -63,6 +270,8 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
         );
     }
 
+    const currentItem = items[currentIndex];
+
     return (
         <motion.div
             className="relative w-full h-[45vh] md:h-[50vh] overflow-hidden rounded-2xl bg-white/[0.03] border border-white/10 group touch-pan-y"
@@ -107,7 +316,16 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                     className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 select-none"
                     onPointerDown={(e) => e.stopPropagation()}
                 >
-                    {items[currentIndex].image && (
+                    {/* Custom Thumbnails */}
+                    {currentItem.customThumbnail === "steganography" && (
+                        <SteganographyCarouselAnimation isPaused={isPaused} />
+                    )}
+                    {currentItem.customThumbnail === "terminal" && (
+                        <TerminalCarouselAnimation isPaused={isPaused} />
+                    )}
+
+                    {/* Regular image thumbnail */}
+                    {currentItem.image && !currentItem.customThumbnail && (
                         <div className="absolute inset-0 z-0">
                             <img
                                 src={items[currentIndex].image}
