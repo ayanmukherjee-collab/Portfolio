@@ -82,6 +82,24 @@ A high-fidelity, immersive personal portfolio website built with **Next.js 16**,
 2.  **Projects**: Update the `works` and `labs` arrays in `app/page.tsx`, `app/works/page.tsx`, and `app/labs/page.tsx`.
 3.  **Profile Picture**: Replace `public/my pfp.jpg` with your own image.
 
+## 🤖 AI CLI Usage
+
+To interact with the AI CLI and fetch generated files, you can use the following methods:
+
+### Option 1: PowerShell Helper Script (Recommended for Windows)
+Use the provided `ask.ps1` script to handle URL encoding and file saving automatically.
+
+```powershell
+.\ask.ps1 -q "your prompt here" -filename "output.py"
+```
+
+### Option 2: Direct curl (Windows PowerShell)
+To use `curl` in PowerShell, you must use `curl.exe` and specify the output filename manually with the `-o` flag.
+
+```powershell
+curl.exe "https://cli-ayan-ai.vercel.app/api/ask?q=hello+world&filename=hello.py" -o hello.py
+```
+
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
