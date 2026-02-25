@@ -3,14 +3,8 @@ import { ProjectCarousel } from "@/components/ProjectCarousel";
 import { Github, Twitter, Linkedin, Instagram, ArrowUpRight } from "lucide-react";
 
 const works = [
-  { id: 1, title: "Project Interface 1", category: "Next.js • System Design" },
-  { id: 2, title: "Project Interface 2", category: "WebGL • Experience" },
-  { id: 3, title: "Project Interface 3", category: "React • Dashboard" },
-];
-
-const labs = [
-  { id: 1, title: "Stenography", category: "Cryptography • Security", href: "/labs/stenography", customThumbnail: "steganography" },
-  { id: 2, title: "CLI-AI", category: "API Design • DevX", href: "/labs/cli-ai", customThumbnail: "terminal" },
+  { id: 1, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", customThumbnail: "steganography" },
+  { id: 2, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", customThumbnail: "terminal" },
   { id: 3, title: "Fluid Simulation", category: "WebGL • GLSL" },
 ];
 
@@ -149,18 +143,7 @@ export default function Home() {
         </div>
       </GlassSection>
 
-      <GlassSection
-        id="experiments"
-        label="04 / Labs"
-        title="LABS"
-      >
-        <div className="w-full flex flex-col items-center gap-8">
-          <ProjectCarousel items={labs} />
-          <a href="/labs" className="px-8 py-3 rounded-full border border-white/20 text-white/80 hover:bg-white hover:text-black hover:border-transparent transition-all duration-300 text-sm font-medium tracking-widest uppercase">
-            View All Labs
-          </a>
-        </div>
-      </GlassSection>
+
 
       <GlassSection
         id="connect"
