@@ -1,11 +1,12 @@
 import { GlassSection } from "@/components/GlassSection";
 import { ProjectCarousel } from "@/components/ProjectCarousel";
-import { Github, Twitter, Linkedin, Instagram, ArrowUpRight } from "lucide-react";
+import { Github, Twitter, Linkedin, Instagram, ArrowUpRight, Mail, Globe } from "lucide-react";
 
 const works = [
-  { id: 1, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", customThumbnail: "steganography" },
-  { id: 2, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", customThumbnail: "terminal" },
-  { id: 3, title: "Fluid Simulation", category: "WebGL • GLSL" },
+  { id: 1, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", customThumbnail: "terminal" },
+  { id: 2, title: "Supercharge", category: "AI Web Application", href: "/works/supercharge" },
+  { id: 3, title: "Campus Connect", category: "Navigation Engine", href: "/works/campus-connect" },
+  { id: 4, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", customThumbnail: "steganography" },
 ];
 
 export default function Home() {
@@ -65,14 +66,14 @@ export default function Home() {
                   What I do
                 </p>
                 <p className="text-sm md:text-lg text-white/50 leading-relaxed max-w-3xl">
-                  I build high-fidelity digital interfaces with a focus on motion, depth, and interaction. My work explores the space between utility and atmosphere, creating systems that feel less like simple websites and more like persistent, immersive environments. I specialize in the React ecosystem, leveraging WebGL and advanced CSS to push the boundaries of what is possible on the web.
+                  AI Systems Builder and Full-Stack Developer with proven experience designing structured memory architectures, graph-based navigation engines, and production-ready AI tooling. Skilled in prompt engineering, AI API integration, PWA architecture, and scalable context modeling, with a track record of delivering working prototypes and reducing redundancy through novel abstraction systems.
                 </p>
               </div>
 
               <div className="mt-8">
                 <p className="text-[10px] uppercase tracking-widest text-white/30 mb-4">Core Technologies</p>
                 <div className="flex gap-2 md:gap-3 flex-wrap opacity-60">
-                  {["TypeScript", "React", "Next.js 14", "Tailwind CSS", "Framer Motion", "WebGL"].map((tech) => (
+                  {["Python", "JavaScript", "C++", "React", "PyTorch", "Prompt Engineering", "System Design"].map((tech) => (
                     <span key={tech} className="text-[10px] md:text-xs font-mono border border-white/10 bg-white/5 px-2 py-1 md:px-3 md:py-1.5 rounded-md hover:bg-white/10 cursor-default transition-colors">
                       {tech}
                     </span>
@@ -124,59 +125,132 @@ export default function Home() {
       </GlassSection>
 
       <GlassSection
-        id="process"
-        label="03 / Approach"
-        title="PROCESS"
+        id="experience"
+        label="03 / Journey"
+        title="EXPERIENCE"
       >
-        <div className="space-y-12">
+        <div className="space-y-12 w-full">
           {[
-            { step: "01", title: "Deconstruction", desc: "Breaking down requirements into atomic conceptual units." },
-            { step: "02", title: "Structure", desc: "Establishing the rigid spine of the application state and layout." },
-            { step: "03", title: "Atmosphere", desc: "Layering depth, light, and motion to breathe life into the grid." }
-          ].map((item) => (
-            <div key={item.step} className="flex flex-col border-l border-white/10 pl-8 py-2">
-              <span className="text-xs font-mono text-white/30 mb-2">{item.step}</span>
-              <h4 className="text-xl font-medium text-white/80 mb-2">{item.title}</h4>
-              <p className="text-white/40 max-w-md">{item.desc}</p>
+            {
+              role: "AI/ML Lead",
+              company: "Campus Connect — GDG Hackathon Ranchi",
+              desc: [
+                "Delivered a fully functional offline indoor navigation engine within hackathon time constraints, enabling route computation across multi-floor buildings with zero GPS dependency.",
+                "Reduced manual mapping effort by ~60% by designing an ML pipeline that automatically parsed floor plan images into navigable graph nodes.",
+                "Implemented A* pathfinding on a graph-converted floor plan, achieving accurate multi-step route resolution across complex campus layouts.",
+                "Shipped a full PWA prototype supporting low-connectivity environments in collaboration with a cross-functional team."
+              ]
+            },
+            {
+              role: "Solo Developer",
+              company: "Supercharge — BYOK AI Web Application",
+              desc: [
+                "Designed PML (Personal Model Language), a custom context encoding system that reduced prompt redundancy by structuring AI memory into modular, reusable injection blocks.",
+                "Built a React + Vite web interface enabling dynamic AI workflows via user-provided API keys, supporting full context customization without backend overhead.",
+                "Architected a scalable context abstraction layer that improved AI response consistency and cut context rebuild time per session.",
+                "Implemented a structured parsing engine for contextual retrieval, enabling deterministic memory injection across multi-turn AI conversations."
+              ]
+            },
+            {
+              role: "Solo Developer",
+              company: "Custom CLI-Based AI Assistant",
+              desc: [
+                "Built a terminal-based AI assistant that unified developer command workflows into a single abstraction layer, reducing context-switching overhead for common tasks.",
+                "Designed a structured I/O pipeline to minimize response latency and enforce execution clarity across multi-step AI interactions.",
+                "Architected a modular command system enabling extensible AI capabilities without modifying the core execution engine."
+              ]
+            }
+          ].map((item, idx) => (
+            <div key={idx} className="flex flex-col border-l border-white/10 pl-8 py-2 relative">
+              <div className="absolute w-2 h-2 rounded-full bg-white/20 -left-[5px] top-2"></div>
+              <span className="text-xs font-mono text-white/40 mb-2 uppercase tracking-widest">{item.company}</span>
+              <h4 className="text-xl font-medium text-white/80 mb-4">{item.role}</h4>
+              <div className="space-y-2">
+                {item.desc.map((line, i) => (
+                  <p key={i} className="text-white/40 text-sm md:text-base leading-relaxed">• {line}</p>
+                ))}
+              </div>
             </div>
           ))}
         </div>
       </GlassSection>
 
-
-
       <GlassSection
         id="connect"
-        label="05 / Signal"
+        label="04 / Signal"
         title="CONNECT"
       >
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 md:gap-6 w-full h-full">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full">
+          {/* Main CTA Card */}
+          <a
+            href="mailto:ayanmukherjee.official@gmail.com"
+            className="md:col-span-8 group relative rounded-2xl bg-white/5 border border-white/10 p-6 md:p-8 md:min-h-[240px] flex flex-col justify-between hover:bg-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <div className="relative z-10 flex justify-between items-start mb-12 md:mb-0">
+              <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span className="text-xs md:text-sm font-medium text-white/60 group-hover:text-white transition-colors">Available for opportunities</span>
+              </div>
+              <div className="p-3 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors hidden md:block">
+                <ArrowUpRight size={20} className="text-white/40 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+              <ArrowUpRight size={20} className="md:hidden text-white/40 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </div>
+
+            <div className="relative z-10 mt-8 md:mt-0">
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white/80 group-hover:text-white transition-colors mb-2 tracking-tight">
+                Let's build together
+              </h3>
+              <p className="text-white/40 text-sm md:text-base font-medium">ayanmukherjee.official@gmail.com</p>
+            </div>
+          </a>
+
+          {/* Location / Status Card */}
+          <div className="md:col-span-4 rounded-2xl bg-white/5 border border-white/10 p-6 flex flex-col items-center justify-center relative justify-center overflow-hidden group min-h-[180px] md:min-h-[240px]">
+            <div
+              className="absolute inset-0 opacity-[0.03] pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)',
+                backgroundSize: '16px 16px'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <Globe className="w-12 h-12 text-white/20 group-hover:text-white/40 group-hover:rotate-[15deg] transition-all duration-700 mb-4" strokeWidth={1.5} />
+            <div className="text-center relative z-10 flex flex-col gap-1">
+              <h4 className="text-lg font-semibold text-white/80 tracking-wide">Ranchi, India</h4>
+              <p className="text-xs font-mono text-white/40 uppercase tracking-widest">IST (UTC+5:30)</p>
+            </div>
+          </div>
+
+          {/* Social Links Cards */}
           {[
-            { label: "Email", href: "mailto:ayanmukherjee.official@gmail.com", icon: ArrowUpRight, span: "col-span-2 md:col-span-2" },
-            { label: "Twitter / X", href: "https://x.com/simply_ayann", icon: Twitter, span: "col-span-1 md:col-span-2" },
-            { label: "GitHub", href: "https://github.com/ayanmukherjee-collab", icon: Github, span: "col-span-1 md:col-span-2" },
-            { label: "LinkedIn", href: "https://www.linkedin.com/in/ayan-vfx", icon: Linkedin, span: "col-span-1 md:col-span-3" },
-            { label: "Instagram", href: "https://www.instagram.com/simply.ayannn", icon: Instagram, span: "col-span-1 md:col-span-3" },
+            { label: "Twitter / X", handle: "@simply_ayann", href: "https://x.com/simply_ayann", icon: Twitter, span: "col-span-1 md:col-span-3" },
+            { label: "GitHub", handle: "ayanmukherjee-collab", href: "https://github.com/ayanmukherjee-collab", icon: Github, span: "col-span-1 md:col-span-3" },
+            { label: "LinkedIn", handle: "ayan-vfx", href: "https://www.linkedin.com/in/ayan-vfx", icon: Linkedin, span: "col-span-1 md:col-span-3" },
+            { label: "Instagram", handle: "@simply.ayannn", href: "https://www.instagram.com/simply.ayannn", icon: Instagram, span: "col-span-1 md:col-span-3" },
           ].map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className={`
-                        ${item.span} group relative h-full min-h-[160px] rounded-2xl bg-white/5 border border-white/10 
-                        p-6 md:p-8 flex flex-col justify-between hover:bg-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden
-                    `}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${item.span} group relative rounded-2xl bg-white/5 border border-white/10 p-5 md:p-6 flex flex-col hover:bg-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden min-h-[130px] md:min-h-[160px]`}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-              <div className="relative z-10 flex justify-between items-start">
-                <div className="p-3 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors">
-                  <item.icon size={24} className="text-white/60 group-hover:text-white transition-colors" />
+              <div className="relative z-10 flex justify-between items-start mb-auto">
+                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors">
+                  <item.icon size={20} className="text-white/50 group-hover:text-white transition-colors stroke-[1.5]" />
                 </div>
-                <ArrowUpRight size={20} className="text-white/20 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <ArrowUpRight size={16} className="text-white/20 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </div>
 
-              <div className="relative z-10">
-                <h3 className="text-2xl md:text-3xl font-bold text-white/40 group-hover:text-white transition-colors">{item.label}</h3>
+              <div className="relative z-10 mt-6 md:mt-8">
+                <h4 className="text-sm md:text-base font-semibold text-white/80 group-hover:text-white transition-colors">{item.label}</h4>
+                <p className="text-[10px] md:text-xs text-white/40 mt-1 truncate font-medium">{item.handle}</p>
               </div>
             </a>
           ))}

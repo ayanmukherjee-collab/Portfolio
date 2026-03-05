@@ -271,14 +271,10 @@ function LabCard({ lab }: { lab: Lab }) {
 }
 
 const allWorks = [
-    { id: 1, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", customThumbnail: "steganography", desc: "Cryptographic LSB embedding tool for hiding data within image pixels." },
-    { id: 2, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", customThumbnail: "terminal", desc: "Zero-setup AI code generator. One curl command, one file." },
-    { id: 3, title: "Fluid Simulation", category: "WebGL • GLSL", href: "/works/fluid", desc: "Real-time Navier-Stokes fluid simulation running on the GPU." },
-    { id: 4, title: "Raymarching Engine", category: "Three.js • Physics", href: "/works/raymarching", desc: "Volumetric rendering engine using signed distance fields." },
-    { id: 5, title: "Generative Audio", category: "WebAudio • Canvas", href: "/works/audio", desc: "Procedural sound generation visualized in real-time." },
-    { id: 6, title: "Particle System", category: "React Three Fiber", href: "/works/particles", desc: "High-performance particle system with interactive force fields." },
-    { id: 7, title: "Neural Style Transfer", category: "TensorFlow.js", href: "/works/neural", desc: "In-browser machine learning for artistic style transfer." },
-    { id: 8, title: "Physics Playground", category: "Matter.js", href: "/works/physics", desc: "2D rigid body physics engine with constraint visualizers." },
+    { id: 1, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", customThumbnail: "terminal", desc: "Built a terminal-based AI assistant that unified developer command workflows into a single abstraction layer." },
+    { id: 2, title: "Supercharge", category: "AI Web Application", href: "/works/supercharge", desc: "React + Vite BYOK AI Web Application utilizing Custom Language Design (PML) to reduce prompt redundancy." },
+    { id: 3, title: "Campus Connect", category: "Navigation Engine", href: "/works/campus-connect", desc: "Offline indoor navigation engine enabling route computation across multi-floor buildings with zero GPS dependency." },
+    { id: 4, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", customThumbnail: "steganography", desc: "Cryptographic LSB embedding tool for hiding data within image pixels." },
 ];
 
 export default function WorksPage() {

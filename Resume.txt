@@ -1,0 +1,42 @@
+Ayan Mukherjee
+Email    LinkedIn    GitHub    Ranchi, Jharkhand
+
+PROFESSIONAL SUMMARY
+AI Systems Builder and Full-Stack Developer with proven experience designing structured memory architectures, graph-based navigation engines, and production-ready AI tooling using Python, React, and custom language design. Led ML system development in competitive hackathon environments, delivering working prototypes under time constraints. Skilled in prompt engineering, AI API integration, PWA architecture, and scalable context modeling — with a track record of reducing redundancy and improving AI response consistency through novel abstraction systems.
+
+SKILLS
+Languages & Systems: Python, JavaScript, C++, C, Java, Pytorch, Numpy,
+AI & ML: Prompt Engineering, Structured Memory Systems, Context Modeling, AI API Integration, ML Model Deployment, Custom Language Design
+Frontend & Tools: React, Vite, Framer, Spline, Lottie Files, Framer, Spline, Lottie Files, REST APIs, Git
+Execution: Rapid prototyping under constraints, System design, Cross-functional collaboration, Technical documentation
+
+PROFESSIONAL EXPERIENCE
+AI/ML Lead  |  Campus Connect — GDG Hackathon Ranchi	
+•	Delivered a fully functional offline indoor navigation engine within hackathon time constraints, enabling route computation across multi-floor buildings with zero GPS dependency.
+•	Reduced manual mapping effort by ~60% by designing an ML pipeline that automatically parsed floor plan images into navigable graph nodes.
+•	Implemented A* pathfinding on a graph-converted floor plan, achieving accurate multi-step route resolution across complex campus layouts.
+•	Shipped a full PWA prototype supporting low-connectivity environments in collaboration with a cross-functional team of designers and backend engineers.
+
+PROJECT EXPERIENCE
+Solo Developer  |  Supercharge — BYOK AI Web Application	
+•	Designed PML (Personal Model Language), a custom context encoding system that reduced prompt redundancy by structuring AI memory into modular, reusable injection blocks.
+•	Built a React + Vite web interface enabling dynamic AI workflows via user-provided API keys, supporting full context customization without backend overhead.
+•	Architected a scalable context abstraction layer that improved AI response consistency and cut context rebuild time per session.
+•	Implemented a structured parsing engine for contextual retrieval, enabling deterministic memory injection across multi-turn AI conversations.
+•	Tech: React, Vite, JavaScript, AI APIs, Custom Language Design (PML)
+
+Solo Developer  |  Custom CLI-Based AI Assistant	
+•	Built a terminal-based AI assistant that unified developer command workflows into a single abstraction layer, reducing context-switching overhead for common tasks.
+•	Designed a structured I/O pipeline to minimize response latency and enforce execution clarity across multi-step AI interactions.
+•	Architected a modular command system enabling extensible AI capabilities without modifying the core execution engine.
+•	Tech: Python, CLI, API Integration
+
+EDUCATION
+Bachelor of Science (BSc), Information Technology (IT)
+Dr. Shyama Prashad Mukherjee University  |  2023-2027
+Relevant Coursework: Data Structures, Algorithms, Operating Systems, Computer Networks, Java, C, C++
+
+NOTABLE ACHIEVEMENTS
+•	Invented PML (Personal Model Language) — a custom AI memory encoding system enabling structured, modular context injection across sessions.
+•	Built and deployed offline-first intelligent systems using graph algorithms and ML pipelines in resource-constrained environments.
+•	Active contributor to Google Developer Groups (GDG) hackathon ecosystem, placing as AI/ML Lead on a shipped campus navigation product.
