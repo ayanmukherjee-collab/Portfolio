@@ -46,17 +46,20 @@ export function GlassSection({ label, title, children, className, id }: GlassSec
                     "relative z-10 w-full max-w-[1000px] min-h-[50vh] md:min-h-[70vh] h-auto mt-32 md:mt-32 lg:mt-56",
                     "flex flex-col",
                     "rounded-[24px] lg:rounded-[32px] overflow-hidden",
-                    "bg-gradient-to-b from-white/10 via-white/5 to-black/40",
-                    "backdrop-blur-[10px]",
-                    "border border-white/[0.15]",
-                    "shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]",
+                    "bg-gradient-to-br from-white/[0.05] via-white/[0.02] to-black/60",
+                    "backdrop-blur-2xl",
+                    "border border-white/[0.08]",
+                    "shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] inset-0 ring-1 ring-inset ring-white/10",
                     "transition-all duration-700 ease-out",
                     "group"
                 )}>
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
-                    {/* Inner Content */}
-                    <div className="flex flex-col h-full p-4 md:p-6 lg:p-10">
+                    <div className="absolute inset-0 bg-noise opacity-[0.03] mix-blend-overlay pointer-events-none" />
+
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+
+                    <div className="relative z-10 flex flex-col h-full p-4 md:p-6 lg:p-10">
                         {label && (
                             <div className="flex-shrink-0 mb-6 lg:mb-8">
                                 <p className="text-xs font-semibold tracking-[0.2em] text-white/40 uppercase mb-3 text-center lg:text-left">
@@ -65,7 +68,7 @@ export function GlassSection({ label, title, children, className, id }: GlassSec
                             </div>
                         )}
 
-                        {/* Body */}
+
                         <div className="flex-grow h-full w-full">
                             {children}
                         </div>

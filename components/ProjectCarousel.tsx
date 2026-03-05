@@ -14,39 +14,29 @@ export interface CarouselItem {
     customThumbnail?: string;
 }
 
-// Steganography animation for carousel - torchlight reveal effect
-function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
+
+export function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
     const gridSize = 24;
-    const revealRadius = 8; // Radius in grid cells
+    const revealRadius = 8;
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
 
-    // Hidden pixels scattered across the entire grid
     const hiddenPixels = new Set([
-        // Top area
         3, 8, 14, 19, 22,
         27, 35, 42,
         51, 58, 66,
-
-        // Upper middle
         76, 82, 89, 94,
         103, 111, 118,
         127, 134, 141, 147,
         152, 159, 166, 172,
-
-        // Center area
         181, 188, 195, 202, 209,
         217, 224, 231, 238,
         243, 251, 258, 265, 271,
         280, 287, 294, 301,
-
-        // Lower middle
         312, 319, 326, 333, 340,
         351, 358, 365, 372,
         384, 391, 398, 405,
         413, 420, 427, 434, 441,
-
-        // Bottom area
         456, 463, 470, 477,
         489, 496, 503, 510, 517,
         532, 539, 546, 553,
@@ -56,7 +46,7 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
-        // Calculate mouse position as grid coordinates (0 to gridSize)
+
         const x = ((e.clientX - rect.left) / rect.width) * gridSize;
         const y = ((e.clientY - rect.top) / rect.height) * gridSize;
         setMousePos({ x, y });
@@ -73,7 +63,7 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
-            {/* Full-size pixel grid with gaps */}
+
             <div
                 className="grid gap-[2px] w-full h-full p-4"
                 style={{
@@ -86,14 +76,14 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
                     const row = Math.floor(i / gridSize);
                     const col = i % gridSize;
 
-                    // Calculate distance from mouse to this cell
+
                     const distance = Math.sqrt(
                         Math.pow(col - mousePos.x, 2) + Math.pow(row - mousePos.y, 2)
                     );
                     const isInRadius = distance < revealRadius;
                     const isRevealed = isPaused && isHidden && isInRadius;
 
-                    // Brightness falloff based on distance
+
                     const brightness = isInRadius
                         ? Math.max(0, 1 - (distance / revealRadius) * 0.5)
                         : 0;
@@ -117,7 +107,7 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
                 })}
             </div>
 
-            {/* Torchlight glow effect that follows cursor */}
+
             {isPaused && (
                 <div
                     className="absolute pointer-events-none transition-opacity duration-300"
@@ -133,7 +123,7 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
                 />
             )}
 
-            {/* Vignette overlay */}
+
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -141,7 +131,7 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
                 }}
             />
 
-            {/* Edge blur effect */}
+
             <div className="absolute inset-0 pointer-events-none" style={{
                 boxShadow: 'inset 0 0 80px 40px rgba(12, 12, 12, 0.7)'
             }} />
@@ -149,11 +139,11 @@ function SteganographyCarouselAnimation({ isPaused }: { isPaused: boolean }) {
     );
 }
 
-// Terminal animation for carousel - responds to carousel hover
-function TerminalCarouselAnimation({ isPaused }: { isPaused: boolean }) {
+
+export function TerminalCarouselAnimation({ isPaused }: { isPaused: boolean }) {
     return (
         <div className="absolute inset-0 bg-[#0c0c0c] flex flex-col font-mono">
-            {/* Terminal Header */}
+
             <div className="h-8 bg-white/[0.03] border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
                 <div className="w-3 h-3 rounded-full bg-[#ff5f56]/60" />
                 <div className="w-3 h-3 rounded-full bg-[#ffbd2e]/60" />
@@ -161,7 +151,7 @@ function TerminalCarouselAnimation({ isPaused }: { isPaused: boolean }) {
                 <span className="text-white/20 text-[11px] ml-2 font-medium tracking-wide">zsh</span>
             </div>
 
-            {/* Terminal Content */}
+
             <div className="flex-1 px-6 py-6 flex flex-col justify-start">
                 <div className="space-y-3 text-sm">
                     <div
@@ -316,7 +306,7 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                     className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 select-none"
                     onPointerDown={(e) => e.stopPropagation()}
                 >
-                    {/* Custom Thumbnails */}
+
                     {currentItem.customThumbnail === "steganography" && (
                         <SteganographyCarouselAnimation isPaused={isPaused} />
                     )}
@@ -324,7 +314,7 @@ export function ProjectCarousel({ items }: ProjectCarouselProps) {
                         <TerminalCarouselAnimation isPaused={isPaused} />
                     )}
 
-                    {/* Regular image thumbnail */}
+
                     {currentItem.image && !currentItem.customThumbnail && (
                         <div className="absolute inset-0 z-0">
                             <img

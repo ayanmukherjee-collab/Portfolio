@@ -8,13 +8,13 @@ export default function CliAiPage() {
     return (
         <main className="min-h-screen bg-[#0b0b0d] text-white selection:bg-cyan-500/20">
 
-            {/* Navigation */}
+
             <Link href="/works" className="fixed bottom-8 left-1/2 -translate-x-1/2 md:translate-x-0 md:bottom-auto md:top-6 md:left-6 z-50 flex items-center gap-2 text-white/40 hover:text-white transition-colors bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 group">
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                 <span className="text-sm font-medium uppercase tracking-wider">Back to Works</span>
             </Link>
 
-            {/* Hero Section */}
+
             <section className="relative w-full py-32 px-4 flex flex-col items-center text-center">
                 <div className="max-w-4xl space-y-8">
                     <motion.div
@@ -35,7 +35,7 @@ export default function CliAiPage() {
                     </motion.div>
                 </div>
 
-                {/* Main Terminal Visualizer */}
+
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -43,7 +43,7 @@ export default function CliAiPage() {
                     className="w-full max-w-4xl mt-16 px-6"
                 >
                     <div className="relative w-full rounded-2xl md:rounded-3xl border border-white/10 bg-black/60 backdrop-blur-xl overflow-hidden shadow-2xl shadow-cyan-500/5">
-                        {/* Terminal Header */}
+
                         <div className="h-12 border-b border-white/10 flex items-center px-4 gap-3 bg-white/5">
                             <div className="flex gap-2">
                                 <div className="w-3 h-3 rounded-full bg-red-500/60" />
@@ -53,7 +53,7 @@ export default function CliAiPage() {
                             <span className="text-xs font-mono text-white/40 ml-2">terminal — zsh</span>
                         </div>
 
-                        {/* Terminal Content */}
+
                         <div className="p-6 md:p-8 font-mono text-sm md:text-base">
                             <div className="flex items-start gap-2 text-white/60">
                                 <span className="text-cyan-400">$</span>
@@ -84,7 +84,7 @@ export default function CliAiPage() {
                 </motion.div>
             </section>
 
-            {/* Overview Section */}
+
             <section className="w-full max-w-5xl mx-auto px-6 py-12 md:py-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div className="space-y-6 text-lg text-white/70 leading-relaxed font-light">
@@ -114,7 +114,7 @@ export default function CliAiPage() {
                 </div>
             </section>
 
-            {/* The Core Idea */}
+
             <section className="w-full bg-white/[0.02] border-y border-white/5 py-24">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row gap-16">
@@ -144,10 +144,10 @@ export default function CliAiPage() {
                             </div>
                         </div>
 
-                        {/* Request/Response Flow */}
+
                         <div className="flex-1 flex items-center justify-center">
                             <div className="relative w-full max-w-sm space-y-4">
-                                {/* Request */}
+
                                 <div className="bg-black/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 group hover:border-cyan-500/30 transition-colors">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="p-2 bg-cyan-500/20 rounded-lg">
@@ -161,14 +161,14 @@ export default function CliAiPage() {
                                     </div>
                                 </div>
 
-                                {/* Arrow */}
+
                                 <div className="flex justify-center text-white/20">
                                     <svg width="24" height="40" viewBox="0 0 24 40" fill="none">
                                         <path d="M12 0 L12 32 M4 24 L12 32 L20 24" stroke="currentColor" strokeWidth="2" />
                                     </svg>
                                 </div>
 
-                                {/* Response */}
+
                                 <div className="bg-black/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 group hover:border-green-500/30 transition-colors">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="p-2 bg-green-500/20 rounded-lg">
@@ -187,7 +187,7 @@ export default function CliAiPage() {
                 </div>
             </section>
 
-            {/* How the Experience Feels */}
+
             <section className="w-full py-24">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-16">
@@ -197,7 +197,7 @@ export default function CliAiPage() {
                         </p>
                     </div>
 
-                    {/* Platform Compatibility Grid */}
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
                             { icon: Globe, label: "Brand-new Laptops", desc: "Fresh out of the box" },
@@ -226,7 +226,7 @@ export default function CliAiPage() {
                 </div>
             </section>
 
-            {/* Behind the Scenes */}
+
             <section className="w-full bg-white/[0.02] border-y border-white/5 py-24">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row-reverse gap-16">
@@ -275,12 +275,12 @@ export default function CliAiPage() {
                             </div>
                         </div>
 
-                        {/* Architecture Diagram */}
+
                         <div className="flex-1 flex items-center justify-center">
                             <div className="relative w-full max-w-sm">
                                 <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 rounded-3xl blur-3xl" />
                                 <div className="relative bg-black/60 backdrop-blur-xl rounded-3xl border border-white/10 p-8 space-y-6">
-                                    {/* Flow Steps */}
+
                                     {[
                                         { num: "01", text: "User sends curl request", color: "cyan" },
                                         { num: "02", text: "Server parses prompt + filename", color: "teal" },
@@ -302,7 +302,7 @@ export default function CliAiPage() {
                 </div>
             </section>
 
-            {/* Why This Approach Works */}
+
             <section className="w-full max-w-4xl mx-auto px-6 py-24">
                 <h2 className="text-3xl font-bold mb-8">Why This Approach Works</h2>
                 <div className="prose prose-invert prose-lg max-w-none text-white/70">
@@ -330,7 +330,7 @@ export default function CliAiPage() {
                 </div>
             </section>
 
-            {/* Closing Thought */}
+
             <section className="w-full py-32 text-center px-6 bg-gradient-to-t from-white/[0.02] to-transparent">
                 <div className="max-w-2xl mx-auto space-y-8">
                     <h2 className="text-2xl font-mono uppercase tracking-widest text-white/40">Final Takeaway</h2>

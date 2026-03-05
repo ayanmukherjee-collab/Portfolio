@@ -1,25 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Github } from "lucide-react";
 import { useState, useRef } from "react";
 
-// Type for lab items
+
 interface Lab {
     id: number;
     title: string;
     category: string;
     href: string;
+    githubHref?: string;
     desc: string;
     image?: string;
     customThumbnail?: string;
 }
 
-// Animated terminal component - typing animation on hover
+
 function TerminalAnimation({ isHovered }: { isHovered: boolean }) {
     return (
         <div className="absolute inset-0 bg-[#0c0c0c] flex flex-col overflow-hidden font-mono">
-            {/* Terminal Header */}
+
             <div className="h-8 bg-white/[0.03] border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
                 <div className="w-3 h-3 rounded-full bg-[#ff5f56]/60" />
                 <div className="w-3 h-3 rounded-full bg-[#ffbd2e]/60" />
@@ -27,10 +28,10 @@ function TerminalAnimation({ isHovered }: { isHovered: boolean }) {
                 <span className="text-white/20 text-[11px] ml-2 font-medium tracking-wide">zsh</span>
             </div>
 
-            {/* Terminal Content - Top Left */}
+
             <div className="flex-1 px-6 py-10 flex flex-col justify-start">
                 <div className="space-y-3">
-                    {/* Command Line */}
+
                     <div
                         className="flex items-start gap-2 text-sm transition-all duration-300"
                         style={{
@@ -46,7 +47,7 @@ function TerminalAnimation({ isHovered }: { isHovered: boolean }) {
                         </div>
                     </div>
 
-                    {/* Progress */}
+
                     <div
                         className="text-white/40 text-xs pl-5 transition-all duration-300"
                         style={{
@@ -58,7 +59,7 @@ function TerminalAnimation({ isHovered }: { isHovered: boolean }) {
                         ▓▓▓▓▓▓▓▓▓▓ 100%
                     </div>
 
-                    {/* Result */}
+
                     <div
                         className="flex items-center gap-2 text-sm pl-5 transition-all duration-300"
                         style={{
@@ -72,7 +73,7 @@ function TerminalAnimation({ isHovered }: { isHovered: boolean }) {
                         <span className="text-white/30 text-xs">saved</span>
                     </div>
 
-                    {/* New prompt with cursor */}
+
                     <div
                         className="flex items-center gap-2 text-sm transition-all duration-300"
                         style={{
@@ -96,39 +97,29 @@ function TerminalAnimation({ isHovered }: { isHovered: boolean }) {
     );
 }
 
-// Steganography animation - torchlight reveal effect
+
 function SteganographyAnimation({ isHovered }: { isHovered: boolean }) {
     const gridSize = 24;
     const revealRadius = 8;
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
 
-    // Hidden pixels scattered across the entire grid
-    const hiddenPixels = new Set([
-        // Top area
+    const hiddenPixels = new Set<number>([
         3, 8, 14, 19, 22,
         27, 35, 42,
         51, 58, 66,
-
-        // Upper middle
         76, 82, 89, 94,
         103, 111, 118,
         127, 134, 141, 147,
         152, 159, 166, 172,
-
-        // Center area
         181, 188, 195, 202, 209,
         217, 224, 231, 238,
         243, 251, 258, 265, 271,
         280, 287, 294, 301,
-
-        // Lower middle
         312, 319, 326, 333, 340,
         351, 358, 365, 372,
         384, 391, 398, 405,
         413, 420, 427, 434, 441,
-
-        // Bottom area
         456, 463, 470, 477,
         489, 496, 503, 510, 517,
         532, 539, 546, 553,
@@ -154,7 +145,7 @@ function SteganographyAnimation({ isHovered }: { isHovered: boolean }) {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
-            {/* Pixel Grid */}
+
             <div
                 className="grid gap-[2px] w-full h-full p-4"
                 style={{
@@ -197,7 +188,7 @@ function SteganographyAnimation({ isHovered }: { isHovered: boolean }) {
                 })}
             </div>
 
-            {/* Torchlight glow */}
+
             {mousePos.x >= 0 && (
                 <div
                     className="absolute pointer-events-none transition-opacity duration-300"
@@ -213,7 +204,7 @@ function SteganographyAnimation({ isHovered }: { isHovered: boolean }) {
                 />
             )}
 
-            {/* Vignette */}
+
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -221,7 +212,7 @@ function SteganographyAnimation({ isHovered }: { isHovered: boolean }) {
                 }}
             />
 
-            {/* Edge blur */}
+
             <div className="absolute inset-0 pointer-events-none" style={{
                 boxShadow: 'inset 0 0 80px 40px rgba(12, 12, 12, 0.7)'
             }} />
@@ -229,7 +220,7 @@ function SteganographyAnimation({ isHovered }: { isHovered: boolean }) {
     );
 }
 
-// Lab card component with hover state
+
 function LabCard({ lab }: { lab: Lab }) {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -240,17 +231,17 @@ function LabCard({ lab }: { lab: Lab }) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Custom animated thumbnail for CLI-AI */}
+
             {lab.customThumbnail === "terminal" && (
                 <TerminalAnimation isHovered={isHovered} />
             )}
 
-            {/* Custom animated thumbnail for Stenography */}
+
             {lab.customThumbnail === "steganography" && (
                 <SteganographyAnimation isHovered={isHovered} />
             )}
 
-            {/* Regular image thumbnail */}
+
             {lab.image && !lab.customThumbnail && (
                 <div className="absolute inset-0 z-0">
                     <img
@@ -266,15 +257,27 @@ function LabCard({ lab }: { lab: Lab }) {
                 <h2 className="text-3xl font-bold text-white mb-2 group-hover:translate-x-2 transition-transform">{lab.title}</h2>
                 {lab.desc && <p className="text-white/60 line-clamp-2 max-w-md">{lab.desc}</p>}
             </div>
+            {lab.githubHref && (
+                <a
+                    href={lab.githubHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/30 text-white/60 hover:text-white transition-all duration-200 pointer-events-auto"
+                    aria-label="View on GitHub"
+                >
+                    <Github size={16} />
+                </a>
+            )}
         </Link>
     );
 }
 
 const allWorks = [
-    { id: 1, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", customThumbnail: "terminal", desc: "Built a terminal-based AI assistant that unified developer command workflows into a single abstraction layer." },
-    { id: 2, title: "Supercharge", category: "AI Web Application", href: "/works/supercharge", desc: "React + Vite BYOK AI Web Application utilizing Custom Language Design (PML) to reduce prompt redundancy." },
-    { id: 3, title: "Campus Connect", category: "Navigation Engine", href: "/works/campus-connect", desc: "Offline indoor navigation engine enabling route computation across multi-floor buildings with zero GPS dependency." },
-    { id: 4, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", customThumbnail: "steganography", desc: "Cryptographic LSB embedding tool for hiding data within image pixels." },
+    { id: 1, title: "CLI-AI", category: "API Design • DevX", href: "/works/cli-ai", githubHref: "https://github.com/ayanmukherjee-collab/CLI-AI", customThumbnail: "terminal", desc: "Built a terminal-based AI assistant that unified developer command workflows into a single abstraction layer." },
+    { id: 2, title: "Supercharge", category: "AI Web Application", href: "/works/supercharge", githubHref: "https://github.com/ayanmukherjee-collab/Supercharge", desc: "React + Vite BYOK AI Web Application utilizing Custom Language Design (PML) to reduce prompt redundancy." },
+    { id: 3, title: "Campus Connect", category: "Navigation Engine", href: "/works/campus-connect", githubHref: "https://github.com/ayanmukherjee-collab/Code-Reapers", desc: "Offline indoor navigation engine enabling route computation across multi-floor buildings with zero GPS dependency." },
+    { id: 4, title: "Stenography", category: "Cryptography • Security", href: "/works/stenography", githubHref: "https://github.com/ayanmukherjee-collab/stenograph", customThumbnail: "steganography", desc: "Cryptographic LSB embedding tool for hiding data within image pixels." },
 ];
 
 export default function WorksPage() {
