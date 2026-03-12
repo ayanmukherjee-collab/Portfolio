@@ -60,13 +60,11 @@ export function Navbar() {
         }
     };
 
+    const isHero = activeId === "identity";
+
     return (
         <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-            <div className={twMerge(
-                "flex items-center gap-1 p-1.5 rounded-full",
-                "bg-white/[0.03] backdrop-blur-[12px] border border-white/10",
-                "shadow-[0_4px_24px_-1px_rgba(0,0,0,0.2)]"
-            )}>
+            <div className="flex items-center gap-1">
                 {navItems.map((item) => {
                     const isActive = isHome && activeId === item.id;
 
@@ -76,14 +74,13 @@ export function Navbar() {
                             href={`/#${item.id}`}
                             onClick={(e) => handleNavClick(e, item.id)}
                             className={twMerge(
-                                "px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all duration-500",
-                                "hover:text-white hover:bg-white/5",
-                                isActive
-                                    ? "text-white bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/10"
-                                    : "text-white/40 border border-transparent"
+                                "px-4 py-2 text-xs font-medium tracking-wide transition-all duration-500",
+                                isHero
+                                    ? (isActive ? "text-black" : "text-black/40 hover:text-black")
+                                    : (isActive ? "text-white" : "text-white/40 hover:text-white")
                             )}
                         >
-                            <span className={isActive ? "drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : ""}>
+                            <span className={isActive ? (isHero ? "drop-shadow-[0_0_8px_rgba(0,0,0,0.2)]" : "drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]") : ""}>
                                 {item.label}
                             </span>
                         </Link>
