@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import Preloader from "@/components/Preloader";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 
@@ -72,6 +73,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body className={`${poppins.className} min-h-screen bg-[#0b0b0d] text-white selection:bg-white/20`}>
+        <Preloader />
         <Navbar />
         {children}
       </body>

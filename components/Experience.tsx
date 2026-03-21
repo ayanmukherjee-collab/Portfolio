@@ -3,7 +3,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ExternalLink } from "lucide-react";
 
-// Experiences data
 const EXPERIENCES = [
     {
         id: 1,
@@ -97,8 +96,6 @@ const TOTAL_FRAMES = 60;
 const SNAPS = EXPERIENCES.length;
 const FRAMES_PER_SNAP = 10;
 const CYCLE_FRAMES = SNAPS * FRAMES_PER_SNAP; // one full loop cycle
-
-// Modulo that handles negative numbers correctly
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
 export default function Experience() {
@@ -151,22 +148,18 @@ export default function Experience() {
         }
     }, [activeCardIndex]);
 
-    // Animation and state refs
     const targetFrameRef = useRef(0);
     const currentFrameRef = useRef(0);
     const imagesRef = useRef<HTMLImageElement[]>([]);
     const requestRef = useRef<number>(0);
 
-    // Dragging refs
     const isDraggingRef = useRef(false);
     const lastYRef = useRef(0);
     const lastXRef = useRef(0);
     const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Active index sync ref to avoid stalling the render loop
     const activeIndexRef = useRef(0);
 
-    // 1. Initial preload
     useEffect(() => {
         let loadedCount = 0;
         const loadImages = async () => {
@@ -198,7 +191,6 @@ export default function Experience() {
         return () => cancelAnimationFrame(requestRef.current);
     }, []);
 
-    // 2. DOM Event Bindings (Wheel and TouchMove) for hover-scrubbing
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
@@ -240,11 +232,16 @@ export default function Experience() {
         };
     }, []);
 
-    // 3. Pointer event handlers for Dragging
     const dragStartXRef = useRef(0);
     const dragStartYRef = useRef(0);
     const directionLockedRef = useRef<'horizontal' | 'vertical' | null>(null);
     const DIRECTION_THRESHOLD = 8; // px before we lock a direction
+
+    // Circular tracking refs
+    const centerXRef = useRef(0);
+    const centerYRef = useRef(0);
+    const lastAngleRef = useRef(0);
+    const SENSITIVITY = 15; // frames per radian of cursor sweep
 
     const handlePointerDown = (e: React.PointerEvent) => {
         isDraggingRef.current = true;
@@ -253,6 +250,14 @@ export default function Experience() {
         lastXRef.current = e.clientX;
         dragStartXRef.current = e.clientX;
         dragStartYRef.current = e.clientY;
+
+        if (gearAreaRef.current) {
+            const rect = gearAreaRef.current.getBoundingClientRect();
+            centerXRef.current = rect.left + rect.width / 2;
+            centerYRef.current = rect.top + rect.height / 2;
+            // Calculate initial touch angle relative to center of gear
+            lastAngleRef.current = Math.atan2(e.clientY - centerYRef.current, e.clientX - centerXRef.current);
+        }
 
         // On desktop, capture immediately for smooth dragging
         if (isDesktop) {
@@ -263,9 +268,6 @@ export default function Experience() {
     const handlePointerMove = (e: React.PointerEvent) => {
         if (!isDraggingRef.current) return;
 
-        const deltaY = e.clientY - lastYRef.current;
-        const deltaX = e.clientX - lastXRef.current;
-
         // On mobile, detect direction first before doing anything
         if (!isDesktop) {
             if (directionLockedRef.current === null) {
@@ -275,7 +277,7 @@ export default function Experience() {
                 if (totalDx >= DIRECTION_THRESHOLD || totalDy >= DIRECTION_THRESHOLD) {
                     if (totalDx > totalDy) {
                         directionLockedRef.current = 'horizontal';
-                        // Now capture pointer for smooth horizontal scrubbing
+                        // Now capture pointer for smooth gear tracking
                         gearAreaRef.current?.setPointerCapture(e.pointerId);
                     } else {
                         directionLockedRef.current = 'vertical';
@@ -289,25 +291,31 @@ export default function Experience() {
                 }
             }
 
-            // If we're here, direction is locked to horizontal
+            // If we're here, direction is locked to horizontal manipulation
             if (directionLockedRef.current === 'horizontal') {
-                lastYRef.current = e.clientY;
-                lastXRef.current = e.clientX;
-                targetFrameRef.current += (-deltaX) * 0.15;
+                const currentAngle = Math.atan2(e.clientY - centerYRef.current, e.clientX - centerXRef.current);
+                let deltaAngle = currentAngle - lastAngleRef.current;
+
+                if (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
+                if (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
+
+                targetFrameRef.current -= deltaAngle * SENSITIVITY;
+                lastAngleRef.current = currentAngle;
+
                 if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
             }
         } else {
-            // Desktop: allow both directions
-            lastYRef.current = e.clientY;
-            lastXRef.current = e.clientX;
+            // Desktop: process angular movement immediately
+            const currentAngle = Math.atan2(e.clientY - centerYRef.current, e.clientX - centerXRef.current);
+            let deltaAngle = currentAngle - lastAngleRef.current;
 
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                targetFrameRef.current += (-deltaX) * 0.15;
-            } else {
-                targetFrameRef.current += deltaY * 0.15;
-            }
+            if (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
+            if (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
 
-            // No clamping — loops via modulo in render
+            // Negative so physical clockwise spin maps naturally to forward shifting
+            targetFrameRef.current -= deltaAngle * SENSITIVITY;
+            lastAngleRef.current = currentAngle;
+
             if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
         }
     };
@@ -326,7 +334,6 @@ export default function Experience() {
         targetFrameRef.current = nearestSnap;
     };
 
-    // Cards Touch swiping logic (Mobile)
     const cardsTouchStartX = useRef(0);
     const cardsTouchStartY = useRef(0);
 
@@ -363,7 +370,6 @@ export default function Experience() {
         targetFrameRef.current = nearestSnap;
     };
 
-    // 4. Render loop
     useEffect(() => {
         if (!imagesLoaded || !canvasRef.current) return;
         const canvas = canvasRef.current;
@@ -442,7 +448,6 @@ export default function Experience() {
         return () => cancelAnimationFrame(requestRef.current);
     }, [imagesLoaded]); // strictly depend on imagesLoaded so loop survives component lifecycle
 
-    // Particles Array - generated client-side to avoid hydration mismatch
     const [particles, setParticles] = useState<Array<{ id: number, top: string, left: string, duration: string, delay: string, size: string }>>([]);
 
     useEffect(() => {
