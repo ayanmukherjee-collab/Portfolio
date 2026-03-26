@@ -75,8 +75,12 @@ export const selectedWorksData: SelectedWork[] = [
     }
 ];
 
+const TOTAL = selectedWorksData.length;
+const mod = (n: number, m: number) => ((n % m) + m) % m;
+
 export default function SelectedWorks() {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [renderOffset, setRenderOffset] = useState(0);
     const [expandedWorkId, setExpandedWorkId] = useState<number | null>(null);
     const [isDesktop, setIsDesktop] = useState(true);
 
@@ -145,8 +149,9 @@ export default function SelectedWorks() {
         const render = () => {
             const diff = targetScrollRef.current - currentScrollRef.current;
             currentScrollRef.current += diff * 0.15; // smooth momentum
+            setRenderOffset(currentScrollRef.current);
 
-            const newIndex = Math.round(currentScrollRef.current);
+            const newIndex = mod(Math.round(currentScrollRef.current), TOTAL);
             if (newIndex !== activeIndexRef.current) {
                 activeIndexRef.current = newIndex;
                 setActiveIndex(newIndex);
@@ -190,7 +195,6 @@ export default function SelectedWorks() {
 
             targetScrollRef.current += deltaX * 0.01;
             if (expandedWorkId !== null) setExpandedWorkId(null);
-            targetScrollRef.current = Math.max(0, Math.min(selectedWorksData.length - 1, targetScrollRef.current));
 
             touchStartXRef.current = e.touches[0].clientX; // update anchor
 
@@ -199,14 +203,20 @@ export default function SelectedWorks() {
     };
 
     const handleTouchEnd = () => {
-        if (isDesktop || expandedWorkId !== null) return;
+        if (isDesktop) return;
         if (isHorizontalSwipe.current) {
             targetScrollRef.current = Math.round(targetScrollRef.current);
         }
     };
 
     const scrollToPanel = (idx: number) => {
-        targetScrollRef.current = idx;
+        // On mobile (looping), find the shortest path to the target
+        const currentRounded = Math.round(targetScrollRef.current);
+        const currentMod = mod(currentRounded, TOTAL);
+        let diff = idx - currentMod;
+        if (diff > TOTAL / 2) diff -= TOTAL;
+        if (diff < -TOTAL / 2) diff += TOTAL;
+        targetScrollRef.current = currentRounded + diff;
         setExpandedWorkId(null);
     };
 
@@ -261,17 +271,37 @@ export default function SelectedWorks() {
                     className="flex-1 relative w-full h-full"
                 >
                     {selectedWorksData.map((work, idx) => {
-                        const isActive = activeIndex === idx;
-                        const state = isActive ? 'active' : activeIndex > idx ? 'past' : 'future';
+                        // Desktop uses activeIndex (discrete), Mobile uses renderOffset (continuous)
+                        let offset = 0;
+                        if (isDesktop) {
+                            offset = idx - activeIndex;
+                        } else {
+                            offset = idx - mod(renderOffset, TOTAL);
+                        }
 
-                        let opacity = state === 'active' ? 1 : 0;
-                        let translate = state === 'active' ? 'translateY(0)' : state === 'past' ? 'translateY(-15vh)' : 'translateY(15vh)';
+                        // Circular wrapping
+                        if (offset > TOTAL / 2) offset -= TOTAL;
+                        if (offset < -TOTAL / 2) offset += TOTAL;
+
+                        const isActive = isDesktop ? offset === 0 : Math.abs(offset) < 0.5;
+
+                        // Desktop: vertical | Mobile: horizontal
+                        let opacity: number;
+                        let translate: string;
+                        if (isDesktop) {
+                            const state = offset === 0 ? 'active' : offset < 0 ? 'past' : 'future';
+                            opacity = isActive ? 1 : 0;
+                            translate = state === 'active' ? 'translateY(0)' : state === 'past' ? 'translateY(-15vh)' : 'translateY(15vh)';
+                        } else {
+                            opacity = isActive ? 1 : 0;
+                            translate = `translateX(${offset * 110}%)`;
+                        }
 
                         return (
                             <div
                                 key={work.id}
                                 className="absolute inset-0 px-4 pb-8 pt-32 sm:pb-12 sm:pt-40 lg:p-12 flex flex-col justify-end lg:justify-center items-center pointer-events-none"
-                                style={{ zIndex: state === 'active' ? 20 : 10 }}
+                                style={{ zIndex: isActive ? 20 : 10 - Math.abs(offset) }}
                             >
                                 <div
                                     data-card
@@ -279,17 +309,17 @@ export default function SelectedWorks() {
                                     style={{
                                         opacity,
                                         transform: translate,
-                                        transition: isDesktop ? 'opacity 500ms ease-in-out, transform 500ms ease-in-out' : 'opacity 400ms ease-out, transform 400ms ease-out',
-                                        pointerEvents: state === 'active' ? 'auto' : 'none',
+                                        transition: isDesktop ? 'opacity 500ms ease-in-out, transform 500ms ease-in-out' : 'opacity 200ms ease-out',
+                                        pointerEvents: isActive ? 'auto' : 'none',
                                         willChange: 'transform, opacity'
                                     }}
                                     role="region"
-                                    aria-hidden={state !== 'active'}
+                                    aria-hidden={!isActive}
                                 >
                                     <div
                                         className="absolute inset-0 z-[15] rounded-[24px] lg:rounded-[32px] pointer-events-none transition-opacity duration-500 ease-in-out"
                                         style={{
-                                            opacity: expandedWorkId === work.id && state === 'active' ? 1 : 0,
+                                            opacity: expandedWorkId === work.id && isActive ? 1 : 0,
                                             background: 'radial-gradient(ellipse 75% 80% at 25% 55%, rgba(11,11,13,0.95) 0%, rgba(11,11,13,0.3) 50%, transparent 100%)',
                                         }}
                                         aria-hidden="true"
@@ -318,9 +348,9 @@ export default function SelectedWorks() {
 
                                         <div
                                             style={{
-                                                opacity: state === 'active' ? 1 : 0,
-                                                transition: 'opacity 300ms ease-in-out 150ms', // Delayed fade
-                                                pointerEvents: state === 'active' ? 'auto' : 'none',
+                                                opacity: isActive ? 1 : 0,
+                                                transition: 'opacity 300ms ease-in-out 150ms',
+                                                pointerEvents: isActive ? 'auto' : 'none',
                                             }}
                                             className="flex flex-wrap items-center gap-3 lg:gap-5 mt-4 lg:mt-10"
                                         >
@@ -349,9 +379,9 @@ export default function SelectedWorks() {
                                         <div
                                             className="grid transition-all duration-500 ease-in-out"
                                             style={{
-                                                gridTemplateRows: expandedWorkId === work.id && state === 'active' ? "1fr" : "0fr",
-                                                opacity: expandedWorkId === work.id && state === 'active' ? 1 : 0,
-                                                pointerEvents: state === 'active' ? 'auto' : 'none',
+                                                gridTemplateRows: expandedWorkId === work.id && isActive ? "1fr" : "0fr",
+                                                opacity: expandedWorkId === work.id && isActive ? 1 : 0,
+                                                pointerEvents: isActive ? 'auto' : 'none',
                                             }}
                                         >
                                             <div className="overflow-hidden">
@@ -376,7 +406,7 @@ export default function SelectedWorks() {
                                             width: work.slug === 'steganography' ? '68%' : '80%',
                                             height: work.slug === 'steganography' ? '155%' : '180%',
                                             transformOrigin: 'center right',
-                                            opacity: state === 'active' ? 1 : 0,
+                                            opacity: isActive ? 1 : 0,
                                             transition: 'opacity 300ms ease-in-out',
                                             WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20%)',
                                             maskImage: 'linear-gradient(to right, transparent 0%, black 20%)',
@@ -388,7 +418,7 @@ export default function SelectedWorks() {
                                                 alt={`${work.title} animation`}
                                                 className="w-full h-full object-contain pointer-events-none"
                                                 aria-hidden="true"
-                                                loading={state === 'active' ? "eager" : "lazy"}
+                                                loading={isActive ? "eager" : "lazy"}
                                             />
                                         ) : (
                                             <video
@@ -396,7 +426,7 @@ export default function SelectedWorks() {
                                                 loop
                                                 muted
                                                 playsInline
-                                                preload={state === 'active' ? "auto" : "none"}
+                                                preload={isActive ? "auto" : "none"}
                                                 poster={work.posterPath}
                                                 className="w-full h-full object-contain pointer-events-none"
                                                 aria-hidden="true"

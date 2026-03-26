@@ -106,7 +106,7 @@ export default function Home() {
             <div className="w-full md:w-[45%] relative min-h-[400px] rounded-[1.5rem] md:rounded-l-[1.5rem] md:rounded-r-2xl overflow-hidden group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/my pfp.jpg"
+                src="/og-image.png"
                 alt="Profile"
                 className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 ease-out"
               />
