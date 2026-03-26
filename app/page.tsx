@@ -1,14 +1,26 @@
 "use client";
 
-import SelectedWorks from "@/components/SelectedWorks";
+import dynamic from "next/dynamic";
 import Hero from "@/components/Hero";
-import Experience from "@/components/Experience";
+
+const SelectedWorks = dynamic(() => import("@/components/SelectedWorks"), { ssr: true });
+const Experience = dynamic(() => import("@/components/Experience"), { ssr: true });
 import { Github, Linkedin, ArrowUpRight, Mail, Globe, ExternalLink, MapPin, Download, Phone } from "lucide-react";
 import { SiPython, SiTypescript, SiReact, SiNextdotjs, SiTailwindcss, SiSupabase, SiFlutter, SiNodedotjs } from "react-icons/si";
 import { useState, useEffect, useRef } from "react";
-
+import { preload } from "react-dom";
 
 export default function Home() {
+  // Emit resource hints during SSR & initial render to fetch assets immediately
+  preload('/brain.webm', { as: 'video', type: 'video/webm', fetchPriority: 'high' });
+  preload('/cli.webm', { as: 'video', type: 'video/webm', fetchPriority: 'low' });
+  preload('/chameleon.webm', { as: 'video', type: 'video/webm', fetchPriority: 'low' });
+
+  for (let i = 1; i <= 5; i++) {
+    const indexStr = i.toString().padStart(4, "0");
+    preload(`/gear/${indexStr}.webp`, { as: 'image', fetchPriority: 'high' });
+  }
+
   return (
     <main className="flex flex-col w-full items-center">
 

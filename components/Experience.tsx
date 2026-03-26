@@ -172,14 +172,20 @@ export default function Experience() {
                         if (loadedCount === TOTAL_FRAMES) setImagesLoaded(true);
                         resolve();
                     };
-                    img.onload = () => {
+
+                    if (img.complete) {
                         imagesRef.current[i] = img;
                         checkComplete();
-                    };
-                    img.onerror = () => {
-                        console.warn(`Failed to load frame ${indexStr}`);
-                        checkComplete();
-                    };
+                    } else {
+                        img.onload = () => {
+                            imagesRef.current[i] = img;
+                            checkComplete();
+                        };
+                        img.onerror = () => {
+                            console.warn(`Failed to load frame ${indexStr}`);
+                            checkComplete();
+                        };
+                    }
                 });
             });
             await Promise.all(loadPromises);

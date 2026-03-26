@@ -426,7 +426,7 @@ export default function SelectedWorks() {
                                                 loop
                                                 muted
                                                 playsInline
-                                                preload={isActive ? "auto" : "none"}
+                                                preload="auto"
                                                 poster={work.posterPath}
                                                 className="w-full h-full object-contain pointer-events-none"
                                                 aria-hidden="true"
