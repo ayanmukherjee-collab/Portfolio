@@ -7,87 +7,85 @@ const EXPERIENCES = [
     {
         id: 1,
         role: "AI/ML Lead",
-        company: "Campus Connect",
-        period: "2023 - Present",
+        company: "GDG Hackathon",
+        period: "2025",
         image: "/my pfp.jpg",
-        link: "https://linkedin.com",
-        tags: ["Python", "TensorFlow", "React", "Node.js"],
+        link: "",
+        tags: ["React", "Python", "A* Algorithm", "PWA"],
         desc: [
-            "Delivered a fully functional offline indoor navigation engine within hackathon time constraints.",
-            "Reduced manual mapping effort by ~60% by designing an ML pipeline that parsed floor plans.",
-            "Implemented A* pathfinding on a graph-converted floor plan.",
-            "Shipped a full PWA prototype supporting low-connectivity environments."
+            "Spearheaded a cross-functional team to design Campus Connect — an AI-assisted indoor navigation PWA.",
+            "Engineered an A* pathfinding algorithm with an AI floor-plan detection module for automated mapping.",
+            "Orchestrated full-stack architecture decisions across React frontend, navigation logic, and AI module."
         ]
     },
     {
         id: 2,
-        role: "Solo Developer",
-        company: "Supercharge — BYOK AI",
-        period: "2023",
-        image: "/supercharge-app-preview.png",
-        link: "https://linkedin.com",
-        tags: ["React", "Vite", "Tailwind", "LLMs"],
+        role: "Web Design Intern",
+        company: "Jharkhand Government Tool Room",
+        period: "06/2025 - 08/2025",
+        image: "/my pfp.jpg",
+        link: "",
+        tags: ["HTML", "CSS", "JavaScript"],
         desc: [
-            "Designed PML (Personal Model Language), a custom context encoding system.",
-            "Built a React + Vite web interface enabling dynamic AI workflows via API keys.",
-            "Architected a scalable context abstraction layer.",
-            "Implemented a structured parsing engine for contextual retrieval."
+            "Architected responsive, cross-browser web interfaces using robust front-end practices.",
+            "Built reusable component libraries that reduced UI development time by approximately 30%.",
+            "Collaborated with senior engineering stakeholders to translate design specifications into production-ready code."
         ]
     },
     {
         id: 3,
-        role: "Lead Developer",
-        company: "Custom CLI AI Assistant",
-        period: "2022 - 2023",
-        image: "/cli-ai.png",
-        link: "https://linkedin.com",
-        tags: ["Node.js", "TypeScript", "CLI", "OpenAI"],
+        role: "Creator & Developer",
+        company: "Supercharge + PML",
+        period: "2025 - Present",
+        image: "/supercharge-app-preview.png",
+        link: "https://ai-supercharge.vercel.app/",
+        tags: ["React", "TypeScript", "Supabase", "LLMs"],
         desc: [
-            "Built a terminal-based AI assistant that unified developer command workflows.",
-            "Designed a structured I/O pipeline to minimize response latency.",
-            "Architected a modular command system enabling extensible AI capabilities."
+            "Engineered a production-grade BYOK AI chat web application enabling unified access to multiple LLM providers.",
+            "Invented PML (Personal Memory Language) — a custom structured memory-encoding protocol.",
+            "Implemented tiered prompt injection granting AI assistants persistent, hallucination-resistant context recall."
         ]
     },
     {
         id: 4,
-        role: "Frontend Engineer",
-        company: "Design Systems Inc.",
-        period: "2022",
-        image: "/readme-preview.png",
-        link: "https://linkedin.com",
-        tags: ["React", "Framer Motion", "Storybook"],
+        role: "Security Developer",
+        company: "Steganography Tool",
+        period: "2025",
+        image: "/cli-ai.png",
+        link: "https://stenograph-ayan.vercel.app/",
+        tags: ["Cryptography", "Security", "Web"],
         desc: [
-            "Developed a comprehensive glassmorphic component library.",
-            "Optimized rendering performance for 60fps animations.",
-            "Integrated complex micro-interactions across the UI suite."
+            "Developed a full-stack web security tool enabling covert file-within-file encoding.",
+            "Integrated a Trojan detection module that analyzes embedded payloads for malicious signatures.",
+            "Utilized advanced steganographic techniques to ensure data stealth and integrity."
         ]
     },
     {
         id: 5,
-        role: "Creative Developer",
-        company: "WebGL Studio",
-        period: "2021",
+        role: "BSc IT Student",
+        company: "Dr. Shyama Prasad Mukherjee University",
+        period: "2022 - Present",
         image: "/my pfp.jpg",
-        link: "https://linkedin.com",
-        tags: ["Three.js", "GSAP", "WebGL"],
+        link: "",
+        tags: ["DBMS", "DSA", "OOP", "Java", "C++"],
         desc: [
-            "Built interactive 3D product configurators.",
-            "Implemented custom shaders for fluid simulations.",
-            "Reduced load times by 40% through aggressive asset optimization."
+            "Pursuing a Bachelor of Science in Information Technology.",
+            "Relevant coursework: Database Management Systems (DBMS), Management Information (MIS), DSA, and OOP.",
+            "Active member of the university developer community and participant in inter-college tech events."
         ]
     },
     {
         id: 6,
-        role: "Open Source Contributor",
-        company: "Various OS Projects",
-        period: "2020 - Present",
-        image: "/supercharge-app-preview.png",
-        link: "https://linkedin.com",
-        tags: ["TypeScript", "Next.js", "Rust"],
+        role: "Cybersecurity Analyst",
+        company: "CTF Competitions",
+        period: "2022 - Present",
+        image: "/my pfp.jpg",
+        link: "",
+        tags: ["Cybersecurity", "OWASP", "CTF"],
         desc: [
-            "Contributed core features to popular Next.js ecosystem tools.",
-            "Maintained heavily star-rated Github repositories.",
-            "Mentored junior developers in open source best practices."
+            "Placed 13th in the first-ever CTF cybersecurity competition hosted at WASP Cybersecurity Webinar, JRSU.",
+            "Applied OWASP vulnerability analysis and penetration testing techniques under competitive conditions.",
+            "Continuously expanding expertise in identifying and mitigating web security threats."
         ]
     }
 ];
@@ -116,7 +114,7 @@ export default function Experience() {
         return () => window.removeEventListener('resize', checkDesktop);
     }, []);
 
-    // Detect wrap-arounds and temporarily disable transitions for cards with large offset jumps
+    // Temporary disable transitions during wrap-arounds
     useLayoutEffect(() => {
         const prev = prevActiveRef.current;
         const curr = activeCardIndex;
@@ -463,21 +461,19 @@ export default function Experience() {
 
     return (
         <div ref={containerRef} className="relative w-full h-[100vh] bg-[#0b0b0d] flex flex-col md:flex-row max-w-[1400px] mx-auto px-6 overflow-hidden">
-
-            {/* Experience Section Heading */}
             <div className="absolute top-8 md:top-14 left-6 md:left-12 z-40 pointer-events-auto">
                 <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">
                     Experience<span className="text-[#4ADE80]">.</span>
                 </h2>
             </div>
 
-            {/* Left Side: Experience Cards */}
+            {/* Experience Cards */}
             <div className="w-full md:w-3/5 h-[75vh] md:h-full relative z-20 pt-[12vh] md:pt-0 flex items-start md:items-center justify-center pointer-events-none">
 
                 <div className="hidden md:block absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#0b0b0d] via-[#0b0b0d]/90 to-transparent z-30 pointer-events-none fade-edge" />
                 <div className="hidden md:block absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0b0b0d] via-[#0b0b0d]/90 to-transparent z-30 pointer-events-none fade-edge" />
 
-                {/* Mobile: Touch Swipe overlay wrapper, Desktop: Center relative wrapper */}
+                {/* Mobile: Swipe overlay, Desktop: Center wrapper */}
                 <div
                     className="w-full h-[60vh] min-h-[400px] md:h-[80vh] md:min-h-[500px] relative flex justify-center items-start md:items-center pointer-events-auto touch-pan-y z-40"
                     onTouchStart={handleCardsTouchStart}
@@ -511,7 +507,6 @@ export default function Experience() {
                                     {/* Content wrapper */}
                                     <div className="flex flex-col relative flex-1 min-h-0 z-10">
 
-                                        {/* Header section (Role, Kicker) */}
                                         <div className="flex flex-col gap-3 lg:gap-4 mb-8 shrink-0">
                                             <span className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] font-medium text-[#4ADE80] flex items-center gap-2 lg:gap-3">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] shadow-[0_0_10px_rgba(74,222,128,0.8)] block" /> {exp.period}
@@ -524,7 +519,6 @@ export default function Experience() {
                                             </p>
                                         </div>
 
-                                        {/* Bullet Points */}
                                         <ul className="space-y-3.5 md:space-y-4 flex-1 overflow-y-auto pr-4 pb-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
                                             {exp.desc.map((bullet, i) => (
                                                 <li key={i} className="flex items-start gap-4">
@@ -534,7 +528,6 @@ export default function Experience() {
                                             ))}
                                         </ul>
 
-                                        {/* Bottom Bar: Tags & Links */}
                                         <div className="flex justify-between items-end sm:items-center pt-6 mt-4 shrink-0 border-t border-white/[0.08]">
                                             <div className="flex gap-2 flex-wrap">
                                                 {/* On mobile only show max 3 tags to not crowd space */}
@@ -567,7 +560,7 @@ export default function Experience() {
                 </div>
             </div>
 
-            {/* Right Side / Bottom: Interactive Gear Area Wrapper */}
+            {/* Gear Engine */}
             <div className="w-full md:w-1/2 h-[40vh] md:h-full absolute bottom-0 md:bottom-auto md:relative flex items-end md:items-center justify-center z-10 pointer-events-none md:right-0 md:top-0">
 
                 <div className="absolute top-[75%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30vh] h-[30vh] bg-[#4ADE80]/5 blur-[120px] rounded-full pointer-events-none" />

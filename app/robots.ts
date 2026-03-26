@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
                 allow: "/",
             },
         ],
-        sitemap: "https://ayanmukherjee.com/sitemap.xml",
+        sitemap: "https://ayan-mukherjee.is-a.dev/sitemap.xml",
     };
 }

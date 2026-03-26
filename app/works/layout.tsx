@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Works",
+    title: "Works — Selected Projects & Case Studies",
     description:
-        "A collection of case studies and experimental projects by Ayan Mukherjee — spanning AI applications, developer tooling, cryptography, and indoor navigation.",
+        "Explore Ayan Mukherjee's portfolio of projects — AI web applications, terminal-based developer tools, cryptographic security tools, and indoor navigation engines.",
+    alternates: {
+        canonical: "https://ayan-mukherjee.is-a.dev/works",
+    },
     openGraph: {
-        title: "Works | Ayan Mukherjee",
+        title: "Works — Selected Projects & Case Studies | Ayan Mukherjee",
         description:
-            "A collection of case studies and experimental projects by Ayan Mukherjee — spanning AI applications, developer tooling, cryptography, and indoor navigation.",
-        url: "https://ayanmukherjee.com/works",
+            "Explore Ayan Mukherjee's portfolio of projects — AI web applications, terminal-based developer tools, cryptographic security tools, and indoor navigation engines.",
+        url: "https://ayan-mukherjee.is-a.dev/works",
     },
     twitter: {
-        title: "Works | Ayan Mukherjee",
+        title: "Works — Selected Projects & Case Studies | Ayan Mukherjee",
         description:
-            "A collection of case studies and experimental projects by Ayan Mukherjee — spanning AI applications, developer tooling, cryptography, and indoor navigation.",
+            "Explore Ayan Mukherjee's portfolio of projects — AI web applications, terminal-based developer tools, cryptographic security tools, and indoor navigation engines.",
     },
 };
 

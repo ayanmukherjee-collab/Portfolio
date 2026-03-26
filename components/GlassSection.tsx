@@ -68,7 +68,6 @@ export function GlassSection({ label, title, children, className, id }: GlassSec
                             </div>
                         )}
 
-
                         <div className="flex-grow h-full w-full">
                             {children}
                         </div>

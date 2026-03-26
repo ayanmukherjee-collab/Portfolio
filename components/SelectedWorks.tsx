@@ -77,14 +77,15 @@ export const selectedWorksData: SelectedWork[] = [
 
 export default function SelectedWorks() {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [isLocked, setIsLocked] = useState(false);
     const [expandedWorkId, setExpandedWorkId] = useState<number | null>(null);
     const [isDesktop, setIsDesktop] = useState(true);
 
-    // Track outgoing card for mobile slide animation
-    const [prevIndex, setPrevIndex] = useState<number | null>(null);
-    const [swipeDir, setSwipeDir] = useState<'left' | 'right'>('left');
-    const prevCleanupTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const activeIndexRef = useRef(0);
+    const targetScrollRef = useRef(0);
+    const currentScrollRef = useRef(0);
+    const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const requestRef = useRef<number>(0);
+    const canvasAreaRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
@@ -93,304 +94,140 @@ export default function SelectedWorks() {
         return () => window.removeEventListener('resize', checkDesktop);
     }, []);
 
-    // The tall outer wrapper acting as our scroll buffer
-    const wrapperRef = useRef<HTMLDivElement>(null);
-    // The sticky inner container identical to viewport size
-    const stickyRef = useRef<HTMLDivElement>(null);
-
-    const isAnimating = useRef(false);
-    const unlockedAt = useRef<number>(0);
-
-    // Ref mirrors so wheel handler doesn't need these in the dependency array
-    const activeIndexRef = useRef(activeIndex);
-    activeIndexRef.current = activeIndex;
-
-    // Track global scroll direction so we know which end to start at on entry
-    const scrollDir = useRef<'down' | 'up'>('down');
+    // Wheel Physics
     useEffect(() => {
-        let prevY = window.scrollY;
-        const track = () => {
-            if (window.scrollY > prevY) scrollDir.current = 'down';
-            else if (window.scrollY < prevY) scrollDir.current = 'up';
-            prevY = window.scrollY;
-        };
-        window.addEventListener('scroll', track, { passive: true });
-        return () => window.removeEventListener('scroll', track);
-    }, []);
-
-    // ── 1. NATIVE STICKY ENTRY DETECTION ──
-    // Because the inner container is `sticky top-0`, the browser natively halts its visual 
-    // movement identically to a perfect lock, with zero JavaScript latency. 
-    // We observe when it reaches perfect 100% viewport coverage to activate the internal wheel trap.
-    useEffect(() => {
-        if (!isDesktop) {
-            if (isLocked) {
-                setIsLocked(false);
-                document.body.style.overflow = '';
-            }
-            return;
-        }
-
-        if (isLocked) return;
-        if (!stickyRef.current) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.intersectionRatio >= 0.99) {
-                    if (Date.now() - unlockedAt.current < 1000) return;
-
-                    // Engage the wheel trap
-                    document.body.style.overflow = 'hidden';
-
-                    const startIdx = scrollDir.current === 'down' ? 0 : selectedWorksData.length - 1;
-                    setActiveIndex(startIdx);
-                    activeIndexRef.current = startIdx;
-
-                    setIsLocked(true);
-
-                    // Nudge the true scrollbar to the middle of our 150dvh buffer wrapper
-                    // so momentum is safely caught without hovering directly on a trigger boundary.
-                    if (wrapperRef.current) {
-                        const targetTop = wrapperRef.current.offsetTop + (window.innerHeight * 0.25);
-                        window.scrollTo({ top: targetTop, behavior: 'instant' });
-                    }
-                }
-            },
-            { threshold: 0.99 }
-        );
-
-        observer.observe(stickyRef.current);
-        return () => observer.disconnect();
-    }, [isLocked, isDesktop]);
-
-    // ── 2. WHEEL/TOUCH INTERCEPTION WHILE LOCKED ──
-    useEffect(() => {
-        if (!isLocked) {
-            document.body.style.overflow = '';
-            return;
-        }
-
-        document.body.style.overflow = 'hidden';
-
-        const COOLDOWN = 250; // Matches the CSS ease-in-out transition exactly
-        const LAST = selectedWorksData.length - 1;
-
-        const unlock = (direction: 'up' | 'down') => {
-            unlockedAt.current = Date.now();
-            isAnimating.current = false;
-            setIsLocked(false);
-            document.body.style.overflow = '';
-
-            // Seamless eject: transport the scrollbar to exactly the edge of our 150dvh buffer.
-            // When `overflow` is restored, the user's ongoing momentum perfectly exits the section.
-            if (wrapperRef.current) {
-                if (direction === 'down') {
-                    const bottomEject = wrapperRef.current.offsetTop + wrapperRef.current.offsetHeight - window.innerHeight + 10;
-                    window.scrollTo({ top: bottomEject, behavior: 'instant' });
-                } else {
-                    const topEject = wrapperRef.current.offsetTop - 10;
-                    window.scrollTo({ top: topEject, behavior: 'instant' });
-                }
-            }
-        };
+        const area = canvasAreaRef.current;
+        if (!area) return;
 
         const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            if (isAnimating.current) return;
-            if (Math.abs(e.deltaY) < 10) return; // Filter trackpad micro-ticks
+            if (!isDesktop) return;
 
-            const goingDown = e.deltaY > 0;
-            const idx = activeIndexRef.current;
+            const rect = area.getBoundingClientRect();
+            const threshold = window.innerHeight * 0.45; // 45% of screen threshold to catch fast scrolls
 
-            if (goingDown) {
-                if (idx < LAST) {
-                    isAnimating.current = true;
-                    setActiveIndex(idx + 1);
-                    setTimeout(() => { isAnimating.current = false; }, COOLDOWN);
-                } else {
-                    unlock('down');
+            if (Math.abs(rect.top) < threshold) {
+                const isScrollingDown = e.deltaY > 0;
+                const isAtBottom = targetScrollRef.current >= selectedWorksData.length - 1;
+                const isAtTop = targetScrollRef.current <= 0;
+
+                // Release condition: allow native scroll if pushed past boundaries
+                if ((isScrollingDown && isAtBottom) || (!isScrollingDown && isAtTop)) {
+                    return;
                 }
-            } else {
-                if (idx > 0) {
-                    isAnimating.current = true;
-                    setActiveIndex(idx - 1);
-                    setTimeout(() => { isAnimating.current = false; }, COOLDOWN);
-                } else {
-                    unlock('up');
+
+                // Otherwise, perfectly trap into 2D mode!
+                e.preventDefault();
+
+                // If not perfectly aligned, magnetically glide it into place smoothly
+                if (Math.abs(rect.top) > 5) {
+                    window.scrollTo({ top: window.scrollY + rect.top, behavior: 'smooth' });
                 }
+
+                // Scrub cards!
+                targetScrollRef.current += e.deltaY * 0.003;
+                if (expandedWorkId !== null) setExpandedWorkId(null);
+                targetScrollRef.current = Math.max(0, Math.min(selectedWorksData.length - 1, targetScrollRef.current));
+
+                if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
+                snapTimeoutRef.current = setTimeout(() => {
+                    targetScrollRef.current = Math.round(targetScrollRef.current);
+                }, 200);
             }
         };
 
-        let touchStartY = 0;
-        const handleTouchStart = (e: TouchEvent) => {
-            touchStartY = e.touches[0].clientY;
-        };
+        area.addEventListener('wheel', handleWheel, { passive: false });
+        // NOTE: No touchmove here because mobile uses pure horizontal swipe now!
+        return () => area.removeEventListener('wheel', handleWheel);
+    }, [isDesktop, expandedWorkId]);
 
-        const handleTouchMove = (e: TouchEvent) => {
-            e.preventDefault();
-            if (isAnimating.current) return;
+    // Animation Loop
+    useEffect(() => {
+        const render = () => {
+            const diff = targetScrollRef.current - currentScrollRef.current;
+            currentScrollRef.current += diff * 0.15; // smooth momentum
 
-            const diff = touchStartY - e.touches[0].clientY;
-            const idx = activeIndexRef.current;
-
-            if (Math.abs(diff) > 40) {
-                const goingDown = diff > 0;
-                if (goingDown) {
-                    if (idx < LAST) {
-                        isAnimating.current = true;
-                        setActiveIndex(idx + 1);
-                        setTimeout(() => { isAnimating.current = false; }, COOLDOWN);
-                    } else {
-                        unlock('down');
-                    }
-                } else {
-                    if (idx > 0) {
-                        isAnimating.current = true;
-                        setActiveIndex(idx - 1);
-                        setTimeout(() => { isAnimating.current = false; }, COOLDOWN);
-                    } else {
-                        unlock('up');
-                    }
-                }
-                touchStartY = e.touches[0].clientY;
+            const newIndex = Math.round(currentScrollRef.current);
+            if (newIndex !== activeIndexRef.current) {
+                activeIndexRef.current = newIndex;
+                setActiveIndex(newIndex);
             }
+
+            requestRef.current = requestAnimationFrame(render);
         };
 
-        window.addEventListener('wheel', handleWheel, { passive: false });
-        window.addEventListener('touchstart', handleTouchStart, { passive: false });
-        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        requestRef.current = requestAnimationFrame(render);
+        return () => cancelAnimationFrame(requestRef.current);
+    }, []);
 
-        return () => {
-            document.body.style.overflow = '';
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-        };
-    }, [isLocked]);
+    // Mobile Touch Physics
+    const touchStartXRef = useRef(0);
+    const touchStartYRef = useRef(0);
+    const isHorizontalSwipe = useRef<boolean | null>(null);
+
+    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        touchStartXRef.current = e.touches[0].clientX;
+        touchStartYRef.current = e.touches[0].clientY;
+        isHorizontalSwipe.current = null;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        if (isDesktop) return;
+
+        const deltaX = touchStartXRef.current - e.touches[0].clientX;
+        const deltaY = touchStartYRef.current - e.touches[0].clientY;
+
+        if (isHorizontalSwipe.current === null) {
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 5) {
+                isHorizontalSwipe.current = true;
+            } else if (Math.abs(deltaY) > 5) {
+                isHorizontalSwipe.current = false;
+            }
+        }
+
+        if (isHorizontalSwipe.current) {
+            // Horizontal swipe! Trap sideways movement to scrub cards.
+            if (e.cancelable) e.preventDefault();
+
+            targetScrollRef.current += deltaX * 0.01;
+            if (expandedWorkId !== null) setExpandedWorkId(null);
+            targetScrollRef.current = Math.max(0, Math.min(selectedWorksData.length - 1, targetScrollRef.current));
+
+            touchStartXRef.current = e.touches[0].clientX; // update anchor
+
+            if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
+        }
+    };
+
+    const handleTouchEnd = () => {
+        if (isDesktop || expandedWorkId !== null) return;
+        if (isHorizontalSwipe.current) {
+            targetScrollRef.current = Math.round(targetScrollRef.current);
+        }
+    };
 
     const scrollToPanel = (idx: number) => {
-        if (isAnimating.current || activeIndex === idx) return;
-        if (!isLocked && isDesktop && wrapperRef.current) {
-            wrapperRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-        isAnimating.current = true;
-
-        // Track outgoing card for mobile slide animation
-        if (!isDesktop) {
-            if (prevCleanupTimer.current) clearTimeout(prevCleanupTimer.current);
-            setPrevIndex(activeIndex);
-            setSwipeDir(idx > activeIndex ? 'left' : 'right');
-            // Clean up the outgoing card after animation completes
-            prevCleanupTimer.current = setTimeout(() => {
-                setPrevIndex(null);
-            }, 250);
-        }
-
-        setActiveIndex(idx);
+        targetScrollRef.current = idx;
         setExpandedWorkId(null);
-        setTimeout(() => { isAnimating.current = false; }, 300);
-    };
-
-    // ── 3. MOBILE SWIPE INTERCEPTION ──
-    // Zero-alloc, rAF-batched, cached-ref approach for 60fps on low-end GPUs.
-    const canvasRef = useRef<HTMLDivElement>(null);
-    const touchStartX = useRef(0);
-    const isDragging = useRef(false);
-    const swipeCommitted = useRef(false);
-    const activeCardRef = useRef<HTMLElement | null>(null);
-    const rafId = useRef(0);
-    const lastDiff = useRef(0);
-
-    const handleMobileTouchStart = (e: React.TouchEvent) => {
-        if (isDesktop) return;
-        touchStartX.current = e.touches[0].clientX;
-        isDragging.current = true;
-        swipeCommitted.current = false;
-        lastDiff.current = 0;
-
-        // Cache the active card ref once — no DOM queries during move
-        const cards = canvasRef.current?.querySelectorAll<HTMLElement>('[data-card]');
-        activeCardRef.current = cards ? cards[activeIndex] || null : null;
-
-        if (activeCardRef.current) {
-            activeCardRef.current.style.transition = 'none';
-        }
-    };
-
-    const handleMobileTouchMove = (e: React.TouchEvent) => {
-        if (isDesktop || !isDragging.current || swipeCommitted.current) return;
-
-        const diff = touchStartX.current - e.touches[0].clientX;
-
-        // Commit swipe mid-move at 30px — instant response
-        if (Math.abs(diff) > 30) {
-            swipeCommitted.current = true;
-            isDragging.current = false;
-            cancelAnimationFrame(rafId.current);
-
-            if (activeCardRef.current) {
-                activeCardRef.current.style.transition = 'opacity 180ms ease-out, transform 180ms ease-out';
-            }
-
-            if (diff > 0) {
-                // Swipe Left -> Next item (Loop to first if at end)
-                scrollToPanel(activeIndex === selectedWorksData.length - 1 ? 0 : activeIndex + 1);
-            } else if (diff < 0) {
-                // Swipe Right -> Prev item (Loop to last if at start)
-                scrollToPanel(activeIndex === 0 ? selectedWorksData.length - 1 : activeIndex - 1);
-            }
-
-            activeCardRef.current = null;
-            return;
-        }
-
-        // Batch DOM write into rAF — prevents layout thrash
-        lastDiff.current = diff;
-        cancelAnimationFrame(rafId.current);
-        rafId.current = requestAnimationFrame(() => {
-            if (activeCardRef.current) {
-                activeCardRef.current.style.transform = `translate3d(${-lastDiff.current}px,0,0)`;
-            }
-        });
-    };
-
-    const handleMobileTouchEnd = () => {
-        if (isDesktop) return;
-        cancelAnimationFrame(rafId.current);
-
-        if (!swipeCommitted.current && activeCardRef.current) {
-            activeCardRef.current.style.transition = 'transform 120ms ease-out';
-            activeCardRef.current.style.transform = '';
-            activeCardRef.current.style.opacity = '';
-        }
-
-        isDragging.current = false;
-        swipeCommitted.current = false;
-        activeCardRef.current = null;
     };
 
     return (
-        <div ref={wrapperRef} className="w-full relative h-[100dvh] lg:h-[150dvh]">
-            <div
-                ref={stickyRef}
-                className="sticky top-0 w-full h-[100dvh] bg-[#0b0b0d] text-white flex flex-col lg:flex-row overflow-hidden"
-                onTouchStart={handleMobileTouchStart}
-                onTouchMove={handleMobileTouchMove}
-                onTouchEnd={handleMobileTouchEnd}
-            >
-                {/* ── LEFT NAV ── sticky interface ── */}
+        <div
+            ref={canvasAreaRef}
+            className="w-full relative h-[100dvh]"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+        >
+            <div className="w-full h-full bg-[#0b0b0d] text-white flex flex-col lg:flex-row shadow-[0_-20px_50px_rgba(11,11,13,1)] z-10 border-t border-white/[0.05] overflow-hidden">
+                {/* Left Navigation */}
                 <nav className="w-full lg:w-[320px] lg:h-full z-50 flex flex-col justify-between py-5 px-5 pt-28 sm:py-6 sm:px-6 sm:pt-36 lg:py-24 lg:px-12 bg-[#0b0b0d]/80 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none border-none lg:border-r border-white/[0.05]">
                     <div className="flex flex-col gap-1 lg:gap-2">
                         <span className="text-[10px] font-semibold tracking-[0.2em] text-white/40 uppercase">02 / Portfolio</span>
                         <h2 className="text-2xl lg:text-3xl font-bold tracking-tight mb-8 hidden lg:block">Selected Works</h2>
                     </div>
 
-                    <ul
-                        className="flex flex-row lg:flex-col gap-6 lg:gap-8 overflow-x-auto lg:overflow-x-visible pb-2 mt-2 lg:mt-0 lg:pb-0 scrollbar-hide snap-x"
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchMove={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                    >
+                    <ul className="flex flex-row lg:flex-col gap-6 lg:gap-8 overflow-x-auto lg:overflow-x-visible pb-2 mt-2 lg:mt-0 lg:pb-0 scrollbar-hide snap-x">
                         {selectedWorksData.map((work, idx) => {
                             const isActive = activeIndex === idx;
                             return (
@@ -401,27 +238,15 @@ export default function SelectedWorks() {
                                         aria-current={isActive ? "page" : undefined}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <span
-                                                className={`text-xs font-mono transition-colors duration-200 ${isActive ? "text-[#7be7ff]" : "text-white/30 group-hover:text-white/60"
-                                                    }`}
-                                            >
+                                            <span className={`text-xs font-mono transition-colors duration-200 ${isActive ? "text-[#7be7ff]" : "text-white/30 group-hover:text-white/60"}`}>
                                                 0{idx + 1}
                                             </span>
-                                            <span
-                                                className={`h-px bg-[#7be7ff] transition-all duration-200 ease-out ${isActive ? "w-8 opacity-100" : "w-0 opacity-0 group-hover:w-4 group-hover:opacity-50"
-                                                    }`}
-                                            />
+                                            <span className={`h-px bg-[#7be7ff] transition-all duration-200 ease-out ${isActive ? "w-8 opacity-100" : "w-0 opacity-0 group-hover:w-4 group-hover:opacity-50"}`} />
                                         </div>
-                                        <span
-                                            className={`whitespace-nowrap text-[15px] sm:text-lg lg:text-xl font-bold tracking-tight transition-all duration-200 ${isActive ? "text-white translate-x-1 lg:translate-x-2" : "text-white/40 group-hover:text-white/70 group-hover:translate-x-1"
-                                                }`}
-                                        >
+                                        <span className={`whitespace-nowrap text-[15px] sm:text-lg lg:text-xl font-bold tracking-tight transition-all duration-200 ${isActive ? "text-white translate-x-1 lg:translate-x-2" : "text-white/40 group-hover:text-white/70 group-hover:translate-x-1"}`}>
                                             {work.title}
                                         </span>
-                                        <span
-                                            className={`whitespace-nowrap text-[9px] lg:text-[10px] uppercase tracking-wider font-semibold transition-opacity duration-200 ${isActive ? "opacity-100 text-white/60 translate-x-1 lg:translate-x-2" : "opacity-0 text-white/40"
-                                                }`}
-                                        >
+                                        <span className={`whitespace-nowrap text-[9px] lg:text-[10px] uppercase tracking-wider font-semibold transition-opacity duration-200 ${isActive ? "opacity-100 text-white/60 translate-x-1 lg:translate-x-2" : "opacity-0 text-white/40"}`}>
                                             {work.category}
                                         </span>
                                     </button>
@@ -429,49 +254,24 @@ export default function SelectedWorks() {
                             );
                         })}
                     </ul>
-
-
                 </nav>
 
-                {/* ── RIGHT CANVAS ── absolute layer stage ── */}
-                <div ref={canvasRef} className="flex-1 relative w-full h-full">
+                {/* Canvas Area */}
+                <div
+                    className="flex-1 relative w-full h-full"
+                >
                     {selectedWorksData.map((work, idx) => {
-                        // Identify state relative to active
                         const isActive = activeIndex === idx;
-                        const isOutgoing = !isDesktop && prevIndex === idx;
-                        const state =
-                            isActive ? 'active' :
-                                activeIndex > idx ? 'past' :
-                                    'future';
+                        const state = isActive ? 'active' : activeIndex > idx ? 'past' : 'future';
 
-                        // On mobile, only render the active card + the outgoing card (for slide anim)
-                        if (!isDesktop && !isActive && !isOutgoing) {
-                            return null;
-                        }
-
-                        let opacity: number;
-                        let translate: string;
-
-                        if (isDesktop) {
-                            opacity = state === 'active' ? 1 : 0;
-                            translate = state === 'active' ? 'translateY(0)' : state === 'past' ? 'translateY(-15vh)' : 'translateY(15vh)';
-                        } else if (isOutgoing) {
-                            // Outgoing card slides off-screen in the swipe direction
-                            opacity = 0;
-                            translate = swipeDir === 'left' ? 'translate3d(-60vw,0,0)' : 'translate3d(60vw,0,0)';
-                        } else {
-                            // Active card slides in from the opposite side
-                            opacity = 1;
-                            translate = 'translate3d(0,0,0)';
-                        }
+                        let opacity = state === 'active' ? 1 : 0;
+                        let translate = state === 'active' ? 'translateY(0)' : state === 'past' ? 'translateY(-15vh)' : 'translateY(15vh)';
 
                         return (
                             <div
                                 key={work.id}
                                 className="absolute inset-0 px-4 pb-8 pt-32 sm:pb-12 sm:pt-40 lg:p-12 flex flex-col justify-end lg:justify-center items-center pointer-events-none"
-                                style={{
-                                    zIndex: state === 'active' ? 20 : 10,
-                                }}
+                                style={{ zIndex: state === 'active' ? 20 : 10 }}
                             >
                                 <div
                                     data-card
@@ -479,14 +279,22 @@ export default function SelectedWorks() {
                                     style={{
                                         opacity,
                                         transform: translate,
-                                        transition: isDesktop ? 'opacity 300ms ease-in-out, transform 300ms ease-in-out' : 'opacity 180ms ease-out, transform 180ms ease-out',
+                                        transition: isDesktop ? 'opacity 500ms ease-in-out, transform 500ms ease-in-out' : 'opacity 400ms ease-out, transform 400ms ease-out',
                                         pointerEvents: state === 'active' ? 'auto' : 'none',
                                         willChange: 'transform, opacity'
                                     }}
                                     role="region"
                                     aria-hidden={state !== 'active'}
                                 >
-                                    {/* ── Content Layer ── */}
+                                    <div
+                                        className="absolute inset-0 z-[15] rounded-[24px] lg:rounded-[32px] pointer-events-none transition-opacity duration-500 ease-in-out"
+                                        style={{
+                                            opacity: expandedWorkId === work.id && state === 'active' ? 1 : 0,
+                                            background: 'radial-gradient(ellipse 75% 80% at 25% 55%, rgba(11,11,13,0.95) 0%, rgba(11,11,13,0.3) 50%, transparent 100%)',
+                                        }}
+                                        aria-hidden="true"
+                                    />
+
                                     <div className="relative z-20 w-full lg:w-3/5 h-full flex flex-col justify-end lg:justify-center gap-5 lg:gap-8 mt-auto lg:mt-0">
                                         <div className="flex flex-col gap-3 lg:gap-4 pr-10 sm:pr-20 lg:pr-0">
                                             <span className="text-[10px] lg:text-[11px] uppercase tracking-[0.2em] font-medium text-[#7be7ff] flex items-center gap-2 lg:gap-3">
@@ -538,7 +346,6 @@ export default function SelectedWorks() {
                                             )}
                                         </div>
 
-                                        {/* ── Expandable Details ── */}
                                         <div
                                             className="grid transition-all duration-500 ease-in-out"
                                             style={{
@@ -560,7 +367,7 @@ export default function SelectedWorks() {
                                         </div>
                                     </div>
 
-                                    {/* ── Floating Media Layer (Desktop) ── */}
+                                    {/* Media Layers */}
                                     <div
                                         className="absolute pointer-events-none z-10 hidden lg:block"
                                         style={{
@@ -595,7 +402,6 @@ export default function SelectedWorks() {
                                                 aria-hidden="true"
                                             >
                                                 <source src={work.videoPath} type="video/webm" />
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img src={work.posterPath} alt="" className="w-full h-full object-contain" />
                                             </video>
                                         )}
@@ -606,7 +412,6 @@ export default function SelectedWorks() {
                                         />
                                     </div>
 
-                                    {/* ── Floating Media Layer (Mobile) ── */}
                                     <div
                                         className={`absolute left-1/2 -top-[25vh] sm:-top-[30vh] pointer-events-none z-0 lg:hidden ${work.slug === 'steganography'
                                             ? 'w-[110vw] sm:w-[100vw] h-[40vh] sm:h-[45vh]'
@@ -638,7 +443,6 @@ export default function SelectedWorks() {
                                                 aria-hidden="true"
                                             >
                                                 <source src={work.videoPath} type="video/webm" />
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img src={work.posterPath} alt="" className="w-full h-full object-contain" />
                                             </video>
                                         )}
