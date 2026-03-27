@@ -11,11 +11,7 @@ import { useState, useEffect, useRef } from "react";
 import { preload } from "react-dom";
 
 export default function Home() {
-  // Emit resource hints during SSR & initial render to fetch assets immediately
-  preload('/brain.webm', { as: 'video', type: 'video/webm', fetchPriority: 'high' });
-  preload('/cli.webm', { as: 'video', type: 'video/webm', fetchPriority: 'low' });
-  preload('/chameleon.webm', { as: 'video', type: 'video/webm', fetchPriority: 'low' });
-
+  // Emit resource hints during SSR & initial render for basic visuals
   for (let i = 1; i <= 5; i++) {
     const indexStr = i.toString().padStart(4, "0");
     preload(`/gear/${indexStr}.webp`, { as: 'image', fetchPriority: 'high' });

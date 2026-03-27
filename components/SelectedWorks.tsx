@@ -426,7 +426,7 @@ export default function SelectedWorks() {
                                                 loop
                                                 muted
                                                 playsInline
-                                                preload="auto"
+                                                preload={isActive ? "auto" : "none"}
                                                 poster={work.posterPath}
                                                 className="w-full h-full object-contain pointer-events-none"
                                                 aria-hidden="true"
@@ -467,7 +467,7 @@ export default function SelectedWorks() {
                                                 loop
                                                 muted
                                                 playsInline
-                                                preload="auto"
+                                                preload={isActive ? "auto" : "none"}
                                                 poster={work.posterPath}
                                                 className="w-full h-full object-contain pointer-events-none"
                                                 aria-hidden="true"

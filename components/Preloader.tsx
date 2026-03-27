@@ -15,8 +15,7 @@ export default function Preloader() {
         }
 
         const imagePaths = [
-            "/ayan.png",
-            "/my pfp.jpg",
+            ...Array.from({ length: 60 }, (_, i) => `/gear/${(i + 1).toString().padStart(4, "0")}.webp`),
         ];
 
         const videoPaths = [
@@ -44,8 +43,8 @@ export default function Preloader() {
         const loadVideos = videoPaths.map((path) =>
             new Promise<void>((resolve) => {
                 const video = document.createElement("video");
-                video.preload = "metadata";
-                video.onloadedmetadata = video.onerror = () => { handleProgress(); resolve(); };
+                video.preload = "auto";
+                video.oncanplay = video.onerror = () => { handleProgress(); resolve(); };
                 video.src = path;
                 video.load();
             })
@@ -62,7 +61,7 @@ export default function Preloader() {
 
         Promise.race([
             Promise.all([...loadImages, ...loadVideos]),
-            new Promise((resolve) => setTimeout(resolve, 2000)),
+            new Promise((resolve) => setTimeout(resolve, 15000)), // Allow up to 15s to fetch
         ]).then(completeLoading);
 
         return () => { setLoading(false); };
