@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Github, ExternalLink, ChevronDown } from "lucide-react";
+import { Github, ExternalLink, ChevronDown } from "lucide-react";
 
 interface SelectedWork {
     id: number;
@@ -15,7 +15,6 @@ interface SelectedWork {
     links: { demo: string; repo: string };
     details?: string[];
     videoPath: string;
-    posterPath: string;
 }
 
 export const selectedWorksData: SelectedWork[] = [
@@ -35,7 +34,6 @@ export const selectedWorksData: SelectedWork[] = [
             "Architected a scalable context abstraction layer that improved AI response consistency."
         ],
         videoPath: "/brain.webm",
-        posterPath: "/videos/supercharge-poster.png",
     },
     {
         id: 2,
@@ -53,7 +51,6 @@ export const selectedWorksData: SelectedWork[] = [
             "Architected a modular command system enabling extensible AI capabilities."
         ],
         videoPath: "/cli.webm",
-        posterPath: "/videos/cli-ai-poster.png",
     },
     {
         id: 3,
@@ -71,18 +68,141 @@ export const selectedWorksData: SelectedWork[] = [
             "Created a user-friendly interface for visual stealth operations without degrading image quality."
         ],
         videoPath: "/chameleon.webm",
-        posterPath: "/videos/steganography-poster.png",
     }
 ];
 
-const TOTAL = selectedWorksData.length;
+// Homepage cards use this tightened copy to reinforce the site's main SEO themes.
+const selectedWorksContent: SelectedWork[] = [
+    {
+        id: 1,
+        slug: "supercharge",
+        title: "Supercharge",
+        category: "AI Web App",
+        href: "/works/supercharge",
+        kicker: "BYOK Engine",
+        hook: "A full-stack AI web app with persistent memory.",
+        tech: ["React", "Vite", "PML", "AI APIs"],
+        links: { demo: "https://ai-supercharge.vercel.app/", repo: "https://github.com/ayanmukherjee-collab/Supercharge" },
+        details: [
+            "Designed PML (Personal Model Language), a custom context format that reduced prompt redundancy.",
+            "Built a React + Vite AI web app that lets users bring their own API keys across providers.",
+            "Architected a scalable context layer that improved response consistency across sessions."
+        ],
+        videoPath: "/brain.webm",
+    },
+    {
+        id: 2,
+        slug: "cli-ai",
+        title: "CLI-AI",
+        category: "Developer Tool",
+        href: "/works/cli-ai",
+        kicker: "Single-Curl Access",
+        hook: "A terminal AI developer tool built around one clean workflow.",
+        tech: ["Python", "API Design", "Bash"],
+        links: { demo: "https://cli-ayan-ai.vercel.app/api/ask?q=hello+world&filename=hello.py", repo: "https://github.com/ayanmukherjee-collab/CLI-AI" },
+        details: [
+            "Built a terminal-based AI developer tool that brings code and command workflows into one interface.",
+            "Designed a structured I/O pipeline to keep output fast, clear, and easy to execute.",
+            "Architected a modular command system that made the tool straightforward to extend."
+        ],
+        videoPath: "/cli.webm",
+    },
+    {
+        id: 3,
+        slug: "steganography",
+        title: "Steganography",
+        category: "Cybersecurity Project",
+        href: "/works/stenography",
+        kicker: "Visual Stealth",
+        hook: "A web security tool for hiding encrypted data inside images.",
+        tech: ["Cryptography", "Steganography", "Security"],
+        links: { demo: "https://stenograph-ayan.vercel.app/", repo: "https://github.com/ayanmukherjee-collab/stenograph" },
+        details: [
+            "Built an engine to embed and extract encrypted data inside image files.",
+            "Implemented cryptographic logic to preserve payload security and data integrity.",
+            "Created a clean interface for visual stealth workflows without noticeably degrading image quality."
+        ],
+        videoPath: "/chameleon.webm",
+    }
+];
+
+const TOTAL = selectedWorksContent.length;
 const mod = (n: number, m: number) => ((n % m) + m) % m;
+
+function ManagedProjectVideo({
+    src,
+    shouldPlay,
+    className,
+}: {
+    src: string;
+    shouldPlay: boolean;
+    className: string;
+}) {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const tryPlay = () => {
+            if (!shouldPlay) {
+                video.pause();
+                return;
+            }
+
+            const playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(() => {
+                    // Autoplay can fail transiently while media is still becoming ready.
+                });
+            }
+        };
+
+        if (!shouldPlay) {
+            video.pause();
+            return;
+        }
+
+        if (video.src !== video.currentSrc && video.currentSrc !== src) {
+            video.load();
+        }
+
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            tryPlay();
+            return;
+        }
+
+        video.addEventListener("loadeddata", tryPlay, { once: true });
+        video.addEventListener("canplay", tryPlay, { once: true });
+        tryPlay();
+
+        return () => {
+            video.removeEventListener("loadeddata", tryPlay);
+            video.removeEventListener("canplay", tryPlay);
+        };
+    }, [shouldPlay, src]);
+
+    return (
+        <video
+            ref={videoRef}
+            autoPlay={shouldPlay}
+            loop
+            muted
+            playsInline
+            preload={shouldPlay ? "metadata" : "none"}
+            src={shouldPlay ? src : undefined}
+            className={className}
+            aria-hidden="true"
+        />
+    );
+}
 
 export default function SelectedWorks() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [renderOffset, setRenderOffset] = useState(0);
     const [expandedWorkId, setExpandedWorkId] = useState<number | null>(null);
     const [isDesktop, setIsDesktop] = useState(true);
+    const [isSectionVisible, setIsSectionVisible] = useState(false);
 
     const activeIndexRef = useRef(0);
     const targetScrollRef = useRef(0);
@@ -98,6 +218,21 @@ export default function SelectedWorks() {
         return () => window.removeEventListener('resize', checkDesktop);
     }, []);
 
+    useEffect(() => {
+        const area = canvasAreaRef.current;
+        if (!area) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsSectionVisible(entry?.isIntersecting ?? false);
+            },
+            { rootMargin: "200px 0px" }
+        );
+
+        observer.observe(area);
+        return () => observer.disconnect();
+    }, []);
+
     // Wheel Physics
     useEffect(() => {
         const area = canvasAreaRef.current;
@@ -111,7 +246,7 @@ export default function SelectedWorks() {
 
             if (Math.abs(rect.top) < threshold) {
                 const isScrollingDown = e.deltaY > 0;
-                const isAtBottom = targetScrollRef.current >= selectedWorksData.length - 1;
+                const isAtBottom = targetScrollRef.current >= selectedWorksContent.length - 1;
                 const isAtTop = targetScrollRef.current <= 0;
 
                 // Release condition: allow native scroll if pushed past boundaries
@@ -130,7 +265,7 @@ export default function SelectedWorks() {
                 // Scrub cards!
                 targetScrollRef.current += e.deltaY * 0.003;
                 if (expandedWorkId !== null) setExpandedWorkId(null);
-                targetScrollRef.current = Math.max(0, Math.min(selectedWorksData.length - 1, targetScrollRef.current));
+                targetScrollRef.current = Math.max(0, Math.min(selectedWorksContent.length - 1, targetScrollRef.current));
 
                 if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
                 snapTimeoutRef.current = setTimeout(() => {
@@ -231,14 +366,14 @@ export default function SelectedWorks() {
         >
             <div className="w-full h-full bg-[#0b0b0d] text-white flex flex-col lg:flex-row shadow-[0_-20px_50px_rgba(11,11,13,1)] z-10 border-t border-white/[0.05] overflow-hidden">
                 {/* Left Navigation */}
-                <nav className="w-full lg:w-[320px] lg:h-full z-50 flex flex-col justify-between py-5 px-5 pt-28 sm:py-6 sm:px-6 sm:pt-36 lg:py-24 lg:px-12 bg-[#0b0b0d]/80 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none border-none lg:border-r border-white/[0.05]">
+                <nav className="w-full lg:w-[320px] lg:h-full z-30 flex flex-col justify-between py-5 px-5 pt-28 sm:py-6 sm:px-6 sm:pt-36 lg:py-24 lg:px-12 bg-[#0b0b0d]/80 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none border-none lg:border-r border-white/[0.05]">
                     <div className="flex flex-col gap-1 lg:gap-2">
                         <span className="text-[10px] font-semibold tracking-[0.2em] text-white/40 uppercase">02 / Portfolio</span>
                         <h2 className="text-2xl lg:text-3xl font-bold tracking-tight mb-8 hidden lg:block">Selected Works</h2>
                     </div>
 
-                    <ul className="flex flex-row lg:flex-col gap-6 lg:gap-8 overflow-x-auto lg:overflow-x-visible pb-2 mt-2 lg:mt-0 lg:pb-0 scrollbar-hide snap-x">
-                        {selectedWorksData.map((work, idx) => {
+                    <ul className="flex flex-row lg:flex-col gap-6 lg:gap-8 overflow-x-auto lg:overflow-x-visible pb-2 mt-2 lg:mt-0 lg:pb-0 scrollbar-hide no-scrollbar snap-x">
+                        {selectedWorksContent.map((work, idx) => {
                             const isActive = activeIndex === idx;
                             return (
                                 <li key={work.id} className="snap-start shrink-0">
@@ -270,7 +405,7 @@ export default function SelectedWorks() {
                 <div
                     className="flex-1 relative w-full h-full"
                 >
-                    {selectedWorksData.map((work, idx) => {
+                    {selectedWorksContent.map((work, idx) => {
                         // Desktop uses activeIndex (discrete), Mobile uses renderOffset (continuous)
                         let offset = 0;
                         if (isDesktop) {
@@ -284,6 +419,7 @@ export default function SelectedWorks() {
                         if (offset < -TOTAL / 2) offset += TOTAL;
 
                         const isActive = isDesktop ? offset === 0 : Math.abs(offset) < 0.5;
+                        const shouldLoadMedia = isSectionVisible && Math.abs(offset) <= 1;
 
                         // Desktop: vertical | Mobile: horizontal
                         let opacity: number;
@@ -421,19 +557,11 @@ export default function SelectedWorks() {
                                                 loading={isActive ? "eager" : "lazy"}
                                             />
                                         ) : (
-                                            <video
-                                                autoPlay
-                                                loop
-                                                muted
-                                                playsInline
-                                                preload={isActive ? "auto" : "none"}
-                                                poster={work.posterPath}
+                                            <ManagedProjectVideo
+                                                src={work.videoPath}
+                                                shouldPlay={shouldLoadMedia}
                                                 className="w-full h-full object-contain pointer-events-none"
-                                                aria-hidden="true"
-                                            >
-                                                <source src={work.videoPath} type="video/webm" />
-                                                <img src={work.posterPath} alt="" className="w-full h-full object-contain" />
-                                            </video>
+                                            />
                                         )}
 
                                         <div
@@ -462,19 +590,11 @@ export default function SelectedWorks() {
                                                 loading="eager"
                                             />
                                         ) : (
-                                            <video
-                                                autoPlay
-                                                loop
-                                                muted
-                                                playsInline
-                                                preload={isActive ? "auto" : "none"}
-                                                poster={work.posterPath}
+                                            <ManagedProjectVideo
+                                                src={work.videoPath}
+                                                shouldPlay={shouldLoadMedia}
                                                 className="w-full h-full object-contain pointer-events-none"
-                                                aria-hidden="true"
-                                            >
-                                                <source src={work.videoPath} type="video/webm" />
-                                                <img src={work.posterPath} alt="" className="w-full h-full object-contain" />
-                                            </video>
+                                            />
                                         )}
                                     </div>
 

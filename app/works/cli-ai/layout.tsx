@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "CLI-AI — Zero-Setup Terminal Code Generator",
+    title: "CLI-AI - Terminal AI Developer Tool Case Study",
     description:
-        "Case study on CLI-AI: a zero-setup, terminal-first AI code generator accessible via a single curl command. No installation, no API keys on the client — just curl and a filename.",
+        "Case study by Ayan Mukherjee on CLI-AI, a terminal-first AI developer tool accessible through a single curl command with no client-side setup.",
     alternates: {
         canonical: "https://ayan-mukherjee.is-a.dev/works/cli-ai",
     },
     openGraph: {
-        title: "CLI-AI — Zero-Setup Terminal Code Generator | Ayan Mukherjee",
+        title: "CLI-AI - Terminal AI Developer Tool Case Study | Ayan Mukherjee",
         description:
-            "Case study on CLI-AI: a zero-setup, terminal-first AI code generator accessible via a single curl command. No installation, no API keys on the client — just curl and a filename.",
+            "Case study by Ayan Mukherjee on CLI-AI, a terminal-first AI developer tool accessible through a single curl command with no client-side setup.",
         url: "https://ayan-mukherjee.is-a.dev/works/cli-ai",
     },
     twitter: {
-        title: "CLI-AI — Zero-Setup Terminal Code Generator | Ayan Mukherjee",
+        title: "CLI-AI - Terminal AI Developer Tool Case Study | Ayan Mukherjee",
         description:
-            "Case study on CLI-AI: a zero-setup, terminal-first AI code generator accessible via a single curl command. No installation, no API keys on the client — just curl and a filename.",
+            "Case study by Ayan Mukherjee on CLI-AI, a terminal-first AI developer tool accessible through a single curl command with no client-side setup.",
     },
 };
 

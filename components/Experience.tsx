@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { startTransition, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ExternalLink } from "lucide-react";
 
-const EXPERIENCES = [
+export const EXPERIENCES = [
     {
         id: 1,
         role: "AI/ML Lead",
@@ -90,8 +90,96 @@ const EXPERIENCES = [
     }
 ];
 
+// The carousel uses this refined wording while preserving the original meaning.
+const experienceContent = [
+    {
+        id: 1,
+        role: "AI/ML Lead",
+        company: "GDG Hackathon",
+        period: "2025",
+        image: "/my pfp.jpg",
+        link: "",
+        tags: ["React", "Python", "A* Algorithm", "PWA"],
+        desc: [
+            "Led a cross-functional team to build Campus Connect, an AI-assisted indoor navigation PWA.",
+            "Built an A* pathfinding system with AI floor-plan detection for automated mapping.",
+            "Directed full-stack architecture decisions across the React frontend, navigation engine, and AI module."
+        ]
+    },
+    {
+        id: 2,
+        role: "Web Design Intern",
+        company: "Jharkhand Government Tool Room",
+        period: "06/2025 - 08/2025",
+        image: "/my pfp.jpg",
+        link: "",
+        tags: ["HTML", "CSS", "JavaScript"],
+        desc: [
+            "Built responsive, cross-browser web interfaces using solid front-end engineering practices.",
+            "Created reusable UI components that reduced development time by approximately 30%.",
+            "Worked with senior engineering stakeholders to turn design specifications into production-ready code."
+        ]
+    },
+    {
+        id: 3,
+        role: "Creator & Developer",
+        company: "Supercharge + PML",
+        period: "2025 - Present",
+        image: "/supercharge-app-preview.png",
+        link: "https://ai-supercharge.vercel.app/",
+        tags: ["React", "TypeScript", "Supabase", "LLMs"],
+        desc: [
+            "Built a production-grade BYOK AI chat web app with unified access to multiple LLM providers.",
+            "Created PML (Personal Memory Language), a custom structured memory protocol.",
+            "Implemented tiered prompt injection to give AI assistants more persistent, hallucination-resistant context recall."
+        ]
+    },
+    {
+        id: 4,
+        role: "Security Developer",
+        company: "Steganography Tool",
+        period: "2025",
+        image: "/cli-ai.png",
+        link: "https://stenograph-ayan.vercel.app/",
+        tags: ["Cryptography", "Security", "Web"],
+        desc: [
+            "Built a full-stack web security tool for covert file-within-file encoding.",
+            "Added a Trojan detection module that scans embedded payloads for malicious signatures.",
+            "Used steganographic techniques to preserve data stealth and integrity."
+        ]
+    },
+    {
+        id: 5,
+        role: "BSc IT Student",
+        company: "Dr. Shyama Prasad Mukherjee University",
+        period: "2022 - Present",
+        image: "/my pfp.jpg",
+        link: "",
+        tags: ["DBMS", "DSA", "OOP", "Java", "C++"],
+        desc: [
+            "Pursuing a Bachelor of Science in Information Technology.",
+            "Coursework includes Database Management Systems, Management Information Systems, DSA, and OOP.",
+            "Active in the university developer community and inter-college tech events."
+        ]
+    },
+    {
+        id: 6,
+        role: "Cybersecurity Analyst",
+        company: "CTF Competitions",
+        period: "2022 - Present",
+        image: "/my pfp.jpg",
+        link: "",
+        tags: ["Cybersecurity", "OWASP", "CTF"],
+        desc: [
+            "Placed 13th in the first CTF cybersecurity competition hosted at the WASP Cybersecurity Webinar, JRSU.",
+            "Applied OWASP-based vulnerability analysis and penetration testing techniques in competitive settings.",
+            "Continuously building hands-on experience in identifying and mitigating web security threats."
+        ]
+    }
+];
+
 const TOTAL_FRAMES = 60;
-const SNAPS = EXPERIENCES.length;
+const SNAPS = experienceContent.length;
 const FRAMES_PER_SNAP = 10;
 const CYCLE_FRAMES = SNAPS * FRAMES_PER_SNAP; // one full loop cycle
 const mod = (n: number, m: number) => ((n % m) + m) % m;
@@ -101,6 +189,7 @@ export default function Experience() {
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const [isDesktop, setIsDesktop] = useState(true);
     const [skipTransition, setSkipTransition] = useState<Set<number>>(new Set());
+    const [shouldLoadFrames, setShouldLoadFrames] = useState(false);
     const prevActiveRef = useRef(0);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -112,6 +201,26 @@ export default function Experience() {
         checkDesktop();
         window.addEventListener('resize', checkDesktop);
         return () => window.removeEventListener('resize', checkDesktop);
+    }, []);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry?.isIntersecting) return;
+
+                startTransition(() => {
+                    setShouldLoadFrames(true);
+                });
+                observer.disconnect();
+            },
+            { rootMargin: "250px 0px" }
+        );
+
+        observer.observe(container);
+        return () => observer.disconnect();
     }, []);
 
     // Temporary disable transitions during wrap-arounds
@@ -159,6 +268,8 @@ export default function Experience() {
     const activeIndexRef = useRef(0);
 
     useEffect(() => {
+        if (!shouldLoadFrames) return;
+
         let loadedCount = 0;
         const loadImages = async () => {
             const loadPromises = Array.from({ length: TOTAL_FRAMES }).map((_, i) => {
@@ -193,7 +304,7 @@ export default function Experience() {
 
         loadImages();
         return () => cancelAnimationFrame(requestRef.current);
-    }, []);
+    }, [shouldLoadFrames]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -466,28 +577,43 @@ export default function Experience() {
     }, []);
 
     return (
-        <div ref={containerRef} className="relative w-full h-[100vh] bg-[#0b0b0d] flex flex-col md:flex-row max-w-[1400px] mx-auto px-6 overflow-hidden">
-            <div className="absolute top-8 md:top-14 left-6 md:left-12 z-40 pointer-events-auto">
+        <div ref={containerRef} className="relative w-full min-h-[100vh] md:h-[100vh] bg-[#0b0b0d] flex flex-col md:flex-row max-w-[1400px] mx-auto px-6 pt-24 md:pt-0 overflow-hidden">
+            <div className="absolute top-8 md:top-14 left-6 right-6 md:left-12 md:right-12 z-40 pointer-events-auto flex items-center justify-between">
                 <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">
                     Experience<span className="text-[#4ADE80]">.</span>
                 </h2>
+
+                {/* Mobile Swipe Indicator (Top Right) */}
+                <button
+                    onClick={() => {
+                        targetFrameRef.current += FRAMES_PER_SNAP;
+                    }}
+                    aria-label="Swipe next"
+                    className={`md:hidden flex items-center justify-center p-2 cursor-pointer transition-opacity duration-1000 ${imagesLoaded ? 'opacity-80' : 'opacity-0'}`}
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#4ADE80] animate-pulse">
+                        <path d="M9 9l-3 3 3 3" />
+                        <path d="M15 9l3 3-3 3" />
+                        <path d="M6 12h12" opacity="0.3" />
+                    </svg>
+                </button>
             </div>
 
             {/* Experience Cards */}
-            <div className="w-full md:w-3/5 h-[75vh] md:h-full relative z-20 pt-[12vh] md:pt-0 flex items-start md:items-center justify-center pointer-events-none">
+            <div className="w-full md:w-3/5 relative z-20 pt-8 md:pt-0 md:h-full flex items-start md:items-center justify-center pointer-events-none">
 
                 <div className="hidden md:block absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#0b0b0d] via-[#0b0b0d]/90 to-transparent z-30 pointer-events-none fade-edge" />
                 <div className="hidden md:block absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0b0b0d] via-[#0b0b0d]/90 to-transparent z-30 pointer-events-none fade-edge" />
 
                 {/* Mobile: Swipe overlay, Desktop: Center wrapper */}
                 <div
-                    className="w-full h-[60vh] min-h-[400px] md:h-[80vh] md:min-h-[500px] relative flex justify-center items-start md:items-center pointer-events-auto touch-pan-y z-40"
+                    className="w-full min-h-[380px] sm:min-h-[400px] md:h-[80vh] md:min-h-[500px] relative flex justify-center items-start md:items-center pointer-events-auto touch-pan-y z-40"
                     onTouchStart={handleCardsTouchStart}
                     onTouchMove={handleCardsTouchMove}
                     onTouchEnd={handleCardsTouchEnd}
                     onTouchCancel={handleCardsTouchEnd}
                 >
-                    {EXPERIENCES.map((exp, idx) => {
+                    {experienceContent.map((exp, idx) => {
                         // Circular offset: ensures cards always slide in from the correct direction
                         let offset = idx - activeCardIndex;
                         if (offset > SNAPS / 2) offset -= SNAPS;
@@ -508,7 +634,7 @@ export default function Experience() {
                                     zIndex: 50 - Math.abs(offset)
                                 }}
                             >
-                                <div className="w-full h-full md:h-auto lg:aspect-[4/3] min-h-[420px] md:min-h-[450px] relative rounded-[24px] lg:rounded-[32px] border border-white/[0.08] bg-gradient-to-br from-white/[0.04] to-transparent p-6 sm:p-8 lg:p-12 flex flex-col backdrop-blur-[24px] shadow-2xl shadow-black/50 overflow-hidden">
+                                <div className="w-full h-full md:h-auto lg:aspect-[4/3] min-h-[380px] sm:min-h-[420px] md:min-h-[450px] relative rounded-[24px] lg:rounded-[32px] border border-white/[0.08] bg-gradient-to-br from-white/[0.04] to-transparent p-6 sm:p-8 lg:p-12 flex flex-col backdrop-blur-[24px] shadow-2xl shadow-black/50 overflow-hidden">
 
                                     {/* Content wrapper */}
                                     <div className="flex flex-col relative flex-1 min-h-0 z-10">
@@ -567,7 +693,7 @@ export default function Experience() {
             </div>
 
             {/* Gear Engine */}
-            <div className="w-full md:w-1/2 h-[40vh] md:h-full absolute bottom-0 md:bottom-auto md:relative flex items-end md:items-center justify-center z-10 pointer-events-none md:right-0 md:top-0">
+            <div className="relative w-full md:w-1/2 h-[42vh] min-h-[320px] max-h-[420px] md:h-full md:min-h-0 md:max-h-none flex items-end md:items-center justify-center z-10 pointer-events-none -mt-4 md:mt-0">
 
                 <div className="absolute top-[75%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30vh] h-[30vh] bg-[#4ADE80]/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -599,7 +725,7 @@ export default function Experience() {
                 {/* The actual constrained gear area with pointer events */}
                 <div
                     ref={gearAreaRef}
-                    className="relative w-[140vw] sm:w-[120vw] h-auto max-w-none md:w-full md:max-w-[500px] lg:max-w-[650px] xl:max-w-[800px] aspect-square flex items-center justify-center cursor-grab active:cursor-grabbing pointer-events-auto z-40 touch-pan-y md:touch-none translate-y-0 md:translate-y-0"
+                    className="relative w-[108vw] max-w-[430px] sm:w-[100vw] sm:max-w-[460px] h-auto md:w-full md:max-w-[500px] lg:max-w-[650px] xl:max-w-[800px] aspect-square flex items-center justify-center cursor-grab active:cursor-grabbing pointer-events-auto z-40 touch-pan-y md:touch-none translate-y-[6%] sm:translate-y-[4%] md:translate-y-0"
                     onPointerDown={handlePointerDown}
                     onPointerMove={handlePointerMove}
                     onPointerUp={handlePointerUp}

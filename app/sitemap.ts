@@ -2,35 +2,36 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://ayan-mukherjee.is-a.dev";
+    const lastModified = new Date();
 
     return [
         {
             url: baseUrl,
-            lastModified: new Date(),
-            changeFrequency: "monthly",
+            lastModified,
+            changeFrequency: "weekly",
             priority: 1,
         },
         {
             url: `${baseUrl}/works`,
-            lastModified: new Date(),
+            lastModified,
             changeFrequency: "monthly",
-            priority: 0.8,
+            priority: 0.9,
         },
         {
             url: `${baseUrl}/works/supercharge`,
-            lastModified: new Date(),
+            lastModified,
             changeFrequency: "monthly",
             priority: 0.7,
         },
         {
             url: `${baseUrl}/works/cli-ai`,
-            lastModified: new Date(),
+            lastModified,
             changeFrequency: "monthly",
             priority: 0.7,
         },
         {
             url: `${baseUrl}/works/stenography`,
-            lastModified: new Date(),
+            lastModified,
             changeFrequency: "monthly",
             priority: 0.7,
         },

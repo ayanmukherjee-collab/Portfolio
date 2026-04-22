@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Supercharge — AI That Actually Remembers You",
+    title: "Supercharge - AI Chat App Case Study",
     description:
-        "Case study on Supercharge: a BYOK AI chat application with a persistent memory layer powered by PML (Personal Memory Language), a custom protocol for encoding human memory into LLM-consumable format.",
+        "Case study by Ayan Mukherjee on Supercharge, an AI chat app with persistent memory, BYOK model support, and a custom context system built with PML.",
     alternates: {
         canonical: "https://ayan-mukherjee.is-a.dev/works/supercharge",
     },
     openGraph: {
-        title: "Supercharge — AI That Actually Remembers You | Ayan Mukherjee",
+        title: "Supercharge - AI Chat App Case Study | Ayan Mukherjee",
         description:
-            "Case study on Supercharge: a BYOK AI chat application with a persistent memory layer powered by PML (Personal Memory Language), a custom protocol for encoding human memory into LLM-consumable format.",
+            "Case study by Ayan Mukherjee on Supercharge, an AI chat app with persistent memory, BYOK model support, and a custom context system built with PML.",
         url: "https://ayan-mukherjee.is-a.dev/works/supercharge",
     },
     twitter: {
-        title: "Supercharge — AI That Actually Remembers You | Ayan Mukherjee",
+        title: "Supercharge - AI Chat App Case Study | Ayan Mukherjee",
         description:
-            "Case study on Supercharge: a BYOK AI chat application with a persistent memory layer powered by PML (Personal Memory Language), a custom protocol for encoding human memory into LLM-consumable format.",
+            "Case study by Ayan Mukherjee on Supercharge, an AI chat app with persistent memory, BYOK model support, and a custom context system built with PML.",
     },
 };
 

@@ -8,63 +8,92 @@ export default function Preloader() {
     const [isFadingOut, setIsFadingOut] = useState(false);
 
     useEffect(() => {
-        const hasPreloaded = sessionStorage.getItem("hasPreloaded");
+        let rafId = 0;
+        let finishTimeout = 0;
+        let fallbackTimeout = 0;
+        let completed = false;
+        const startTime = performance.now();
+        const connection = "connection" in navigator
+            ? (navigator as Navigator & {
+                connection?: { saveData?: boolean; effectiveType?: string };
+            }).connection
+            : undefined;
+        const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
+        const prefersQuickExit =
+            isSmallScreen ||
+            connection?.saveData === true ||
+            connection?.effectiveType?.includes("2g");
+
+        const MIN_DURATION = prefersQuickExit ? 180 : 420;
+        const MAX_DURATION = prefersQuickExit ? 700 : 1100;
+        const FADE_DURATION = 420;
+
+        const animateProgress = () => {
+            const elapsed = performance.now() - startTime;
+            const target = Math.min(92, Math.round((elapsed / MAX_DURATION) * 92));
+            setProgress((current) => (current >= target ? current : target));
+
+            if (!completed) {
+                rafId = window.requestAnimationFrame(animateProgress);
+            }
+        };
+
+        const completeLoading = () => {
+            if (completed) return;
+            completed = true;
+
+            window.cancelAnimationFrame(rafId);
+            setProgress(100);
+            setIsFadingOut(true);
+
+            finishTimeout = window.setTimeout(() => {
+                setLoading(false);
+                try {
+                    sessionStorage.setItem("hasPreloaded", "true");
+                } catch {
+                    // Ignore storage issues in private browsing or strict environments.
+                }
+            }, FADE_DURATION);
+        };
+
+        const scheduleCompletion = () => {
+            if (completed) return;
+
+            const elapsed = performance.now() - startTime;
+            const remaining = Math.max(0, MIN_DURATION - elapsed);
+            window.clearTimeout(finishTimeout);
+            finishTimeout = window.setTimeout(completeLoading, remaining);
+        };
+
+        let hasPreloaded = false;
+        try {
+            hasPreloaded = sessionStorage.getItem("hasPreloaded") === "true";
+        } catch {
+            hasPreloaded = false;
+        }
+
         if (hasPreloaded) {
             setLoading(false);
             return;
         }
 
-        const imagePaths = [
-            ...Array.from({ length: 60 }, (_, i) => `/gear/${(i + 1).toString().padStart(4, "0")}.webp`),
-        ];
+        rafId = window.requestAnimationFrame(animateProgress);
+        fallbackTimeout = window.setTimeout(scheduleCompletion, MAX_DURATION);
 
-        const videoPaths = [
-            "/brain.webm",
-            "/cli.webm",
-            "/chameleon.webm",
-        ];
+        if (document.readyState === "complete") {
+            scheduleCompletion();
+        } else {
+            window.addEventListener("load", scheduleCompletion, { once: true });
+        }
 
-        let loadedItems = 0;
-        const totalItems = imagePaths.length + videoPaths.length;
-
-        const handleProgress = () => {
-            loadedItems++;
-            setProgress(Math.floor((loadedItems / totalItems) * 100));
+        return () => {
+            completed = true;
+            window.cancelAnimationFrame(rafId);
+            window.clearTimeout(finishTimeout);
+            window.clearTimeout(fallbackTimeout);
+            window.removeEventListener("load", scheduleCompletion);
+            setLoading(false);
         };
-
-        const loadImages = imagePaths.map((path) =>
-            new Promise<void>((resolve) => {
-                const img = new Image();
-                img.onload = img.onerror = () => { handleProgress(); resolve(); };
-                img.src = path;
-            })
-        );
-
-        const loadVideos = videoPaths.map((path) =>
-            new Promise<void>((resolve) => {
-                const video = document.createElement("video");
-                video.preload = "auto";
-                video.oncanplay = video.onerror = () => { handleProgress(); resolve(); };
-                video.src = path;
-                video.load();
-            })
-        );
-
-        const completeLoading = () => {
-            setProgress(100);
-            setIsFadingOut(true);
-            setTimeout(() => {
-                setLoading(false);
-                sessionStorage.setItem("hasPreloaded", "true");
-            }, 500);
-        };
-
-        Promise.race([
-            Promise.all([...loadImages, ...loadVideos]),
-            new Promise((resolve) => setTimeout(resolve, 15000)), // Allow up to 15s to fetch
-        ]).then(completeLoading);
-
-        return () => { setLoading(false); };
     }, []);
 
     if (!loading) return null;

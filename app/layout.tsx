@@ -6,58 +6,64 @@ import Preloader from "@/components/Preloader";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 
+const siteUrl = "https://ayan-mukherjee.is-a.dev";
+const siteTitle = "Ayan Mukherjee | Software Developer Portfolio";
+const siteDescription =
+  "Ayan Mukherjee is a software developer and full-stack developer building web apps, mobile apps, and AI tools with React, Next.js, TypeScript, Python, and Flutter.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ayan-mukherjee.is-a.dev"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Ayan Mukherjee — Product Developer & AI Systems Builder",
+    default: siteTitle,
     template: "%s | Ayan Mukherjee",
   },
-  description:
-    "Portfolio of Ayan Mukherjee — product developer and AI systems builder crafting full-stack web applications, cross-platform mobile apps, and custom AI solutions.",
+  description: siteDescription,
   keywords: [
     "Ayan Mukherjee",
-    "portfolio",
-    "product developer",
-    "AI systems builder",
+    "Ayan Mukherjee portfolio",
+    "Ayan Mukherjee software developer",
+    "Ayan Mukherjee full stack developer",
+    "software developer portfolio",
     "full-stack developer",
+    "software engineer",
+    "web developer",
     "React developer",
     "Next.js developer",
-    "TypeScript",
-    "Python",
+    "TypeScript developer",
+    "Python developer",
+    "AI engineer",
     "Flutter developer",
-    "web applications",
-    "mobile apps",
-    "AI solutions",
+    "web developer portfolio",
+    "AI developer portfolio",
     "Ranchi",
     "India",
   ],
-  authors: [{ name: "Ayan Mukherjee", url: "https://ayan-mukherjee.is-a.dev" }],
+  authors: [{ name: "Ayan Mukherjee", url: siteUrl }],
   creator: "Ayan Mukherjee",
+  publisher: "Ayan Mukherjee",
   alternates: {
-    canonical: "https://ayan-mukherjee.is-a.dev",
+    canonical: siteUrl,
   },
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://ayan-mukherjee.is-a.dev",
-    siteName: "Ayan Mukherjee",
-    title: "Ayan Mukherjee — Product Developer & AI Systems Builder",
-    description:
-      "Portfolio of Ayan Mukherjee — product developer and AI systems builder shipping full-stack web applications, cross-platform mobile apps, and custom AI solutions.",
+    url: siteUrl,
+    siteName: "Ayan Mukherjee Portfolio",
+    title: siteTitle,
+    description: siteDescription,
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ayan Mukherjee — Product Developer & AI Systems Builder",
+        alt: "Ayan Mukherjee software developer portfolio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ayan Mukherjee — Product Developer & AI Systems Builder",
-    description:
-      "Portfolio of Ayan Mukherjee — product developer and AI systems builder shipping full-stack web apps, mobile apps, and custom AI solutions.",
+    title: siteTitle,
+    description: siteDescription,
     images: ["/og-image.png"],
   },
   robots: {
@@ -88,12 +94,33 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               name: "Ayan Mukherjee",
-              url: "https://ayan-mukherjee.is-a.dev",
+              givenName: "Ayan",
+              familyName: "Mukherjee",
+              url: siteUrl,
+              image: `${siteUrl}/og-image.png`,
+              description: siteDescription,
+              email: "mailto:ayanmukherjee.official@gmail.com",
+              telephone: "+91 62061 15536",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Ranchi",
+                addressCountry: "IN",
+              },
               sameAs: [
                 "https://github.com/ayanmukherjee-collab",
-                "https://www.linkedin.com/in/ayan-vfx"
+                "https://www.linkedin.com/in/ayan-vfx",
               ],
-              jobTitle: "Product Developer & AI Systems Builder",
+              jobTitle: "Software Developer",
+              knowsAbout: [
+                "Software development",
+                "Full-stack development",
+                "React",
+                "Next.js",
+                "TypeScript",
+                "Python",
+                "Flutter",
+                "AI applications",
+              ],
               worksFor: {
                 "@type": "Organization",
                 name: "Freelance",
@@ -107,10 +134,13 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Ayan Mukherjee — Portfolio",
-              url: "https://ayan-mukherjee.is-a.dev",
-              description:
-                "Portfolio of Ayan Mukherjee — product developer and AI systems builder shipping full-stack web applications, cross-platform mobile apps, and custom AI solutions.",
+              name: "Ayan Mukherjee Portfolio",
+              url: siteUrl,
+              description: siteDescription,
+              author: {
+                "@type": "Person",
+                name: "Ayan Mukherjee",
+              },
             }),
           }}
         />

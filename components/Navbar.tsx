@@ -63,7 +63,7 @@ export function Navbar() {
     const isHero = activeId === "identity";
 
     return (
-        <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+        <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-[120]">
             <div className="flex items-center gap-1">
                 {navItems.map((item) => {
                     const isActive = isHome && activeId === item.id;
@@ -74,7 +74,7 @@ export function Navbar() {
                             href={`/#${item.id}`}
                             onClick={(e) => handleNavClick(e, item.id)}
                             className={twMerge(
-                                "px-4 py-2 text-xs font-medium tracking-wide transition-all duration-500",
+                                "px-4 py-2 text-sm font-medium tracking-wide transition-all duration-500",
                                 isHero
                                     ? (isActive ? "text-black" : "text-black/40 hover:text-black")
                                     : (isActive ? "text-white" : "text-white/40 hover:text-white")

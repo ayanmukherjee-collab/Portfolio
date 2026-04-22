@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: "Ayan Mukherjee — Product Developer & AI Systems Builder",
+        name: "Ayan Mukherjee | Software Developer Portfolio",
         short_name: "Ayan Mukherjee",
         description:
-            "Portfolio of Ayan Mukherjee — product developer and AI systems builder crafting full-stack web applications, cross-platform mobile apps, and custom AI solutions.",
+            "Portfolio of Ayan Mukherjee, a software developer building web apps, mobile apps, and AI tools.",
         start_url: "/",
         display: "standalone",
         background_color: "#0b0b0d",

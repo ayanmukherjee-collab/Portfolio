@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Steganography — Cryptographic Data Hiding Case Study",
+    title: "Steganography - Cybersecurity Project Case Study",
     description:
-        "Case study on steganography: a cryptographic LSB embedding tool for hiding data within image pixels. Explores AI-driven steganography with GANs, steganalysis, and real-world cybersecurity implications.",
+        "Case study by Ayan Mukherjee on a steganography and cybersecurity project for hiding encrypted data inside image pixels using LSB-based techniques.",
     alternates: {
         canonical: "https://ayan-mukherjee.is-a.dev/works/stenography",
     },
     openGraph: {
-        title: "Steganography — Cryptographic Data Hiding | Ayan Mukherjee",
+        title: "Steganography - Cybersecurity Project Case Study | Ayan Mukherjee",
         description:
-            "Deep dive into steganography: hiding information in plain sight using LSB embedding, GANs, and the digital arms race between concealment and detection.",
+            "Case study by Ayan Mukherjee on a steganography and cybersecurity project for hiding encrypted data inside image pixels using LSB-based techniques.",
         url: "https://ayan-mukherjee.is-a.dev/works/stenography",
     },
     twitter: {
-        title: "Steganography — Cryptographic Data Hiding | Ayan Mukherjee",
+        title: "Steganography - Cybersecurity Project Case Study | Ayan Mukherjee",
         description:
-            "Deep dive into steganography: hiding information in plain sight using LSB embedding, GANs, and the digital arms race between concealment and detection.",
+            "Case study by Ayan Mukherjee on a steganography and cybersecurity project for hiding encrypted data inside image pixels using LSB-based techniques.",
     },
 };
 
